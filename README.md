@@ -1,6 +1,6 @@
 - 👋 Hi, I’m @subratsahani
 - 👀 I’m interested in Data Science, Product/Project Management
-- 🌱 I’m currently learning Data Analytics, enrolled for MBA at Gies College of Business for Fall 2022
+- 🌱 Alumni of Gies College of Business UIUC
 - 💞️ I’m looking to collaborate on any of the Projects involving Data Analysis.
 - 📫 How to reach me : subrat.sahani@gmail.com
 
