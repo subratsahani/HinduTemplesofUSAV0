@@ -111,5 +111,226 @@
     "longitude": -83.32794992521677,
     "website": "http://www.sribalajivediccenter.org/index.aspx",
     "googleMapsLink": "https://maps.google.com/?q=42.59081867844303, -83.32794992521677"
-  }
+  },
+  
+  {
+    "id": "12",
+    "name": "Bharatiya Temple of Metropolitan Detroit",
+    "address": "6850 N Adams Rd, Troy, MI 48098",
+    "state": "Michigan",
+    "image": "/placeholder.svg?height=200&width=300",
+    "latitude": 42.618892323194544,
+    "longitude": -83.20835129085933,
+    "website": "http://www.bharatiya-temple.org/",
+    "googleMapsLink": "https://maps.google.com/?q=42.618892323194544,-83.20835129085933"
+  },
+  {
+    "id": "13",
+    "name": "Sri Venkateswara Temple & Cultural Center",
+    "address": "26233 Taft Rd, Novi, MI 48374",
+    "state": "Michigan",
+    "image": "/placeholder.svg?height=200&width=300",
+    "latitude": 42.48273219371483,
+    "longitude": -83.49899105721319,
+    "website": "http://www.svtemplemi.org/",
+    "googleMapsLink": "https://maps.google.com/?q=42.48273219371483,-83.49899105721319"
+  },
+  {
+    "id": "14",
+    "name": "BAPS Shri Swaminarayan Mandir",
+    "address": "3175 Canton Ctr Rd, Canton, MI 48188",
+    "state": "Michigan",
+    "image": "/placeholder.svg?height=200&width=300",
+    "latitude": 42.283500365007285, 
+    "longitude": -83.48409918588297,
+    "website": "http://www.baps.org/Global-Network/North-America/Detroit.aspx",
+    "googleMapsLink": "https://maps.google.com/?q=42.283500365007285,-83.48409918588297"
+  },
+  {
+    "id": "15",
+    "name": "Durga Temple",
+    "address": "4215 E McNichols Rd, Detroit, MI 48212",
+    "state": "Michigan",
+    "image": "/placeholder.svg?height=200&width=300",
+    "latitude": 42.41896895396084,
+    "longitude": -83.06109267971375,
+    "website": "https://durgatemple.net/",
+    "googleMapsLink": "https://maps.google.com/?q=42.41896895396084,-83.06109267971375"
+  },
+  {
+    "id": "16",
+    "name": "ISKCON Detroit",
+    "address": "383 Lenox St, Detroit, MI 48215",
+    "state": "Michigan",
+    "image": "/placeholder.svg?height=200&width=300",
+    "latitude": 42.362040325563825,
+    "longitude": -82.94661647970756,
+    "website": "http://www.iskcondetroit.com/",
+    "googleMapsLink": "https://maps.google.com/?q=42.362040325563825,-82.94661647970756"
+  },
+  {
+    "id": "17",
+    "name": "Kasi Sri Vishwanath Temple",
+    "address": "1147 Elms Rd, Flint, MI 48532",
+    "state": "Michigan",
+    "image": "/placeholder.svg?height=200&width=300",
+    "latitude": 43.012733264997955,
+    "longitude": -83.80966054530258,
+    "website": "http://www.kasitempleflint.org/",
+    "googleMapsLink": "https://maps.google.com/?q=43.012733264997955,-83.80966054530258"
+  },
+  {
+    "id": "18",
+    "name": "Indo-American Cultural Center and Temple",
+    "address": "2002 Ramona Ave, Portage, MI 49002",
+    "state": "Michigan",
+    "image": "/placeholder.svg?height=200&width=300",
+    "latitude": 42.22080476275698,
+    "longitude": -85.56608192136885,
+    "website": "http://kalamazootemple.org/",
+    "googleMapsLink": "https://maps.google.com/?q=42.22080476275698,-85.56608192136885"
+  },
+  {
+    "id": "19",
+    "name": "West Michigan Hindu Temple",
+    "address": "4870 Whitneyville Ave SE, Ada, MI 49301",
+    "state": "Michigan",
+	  "image": "/placeholder.svg?height=200&width=300",
+    "latitude": 42.87661526668789,
+    "longitude": -85.46057634456851,
+    "website": "http://www.westmichiganhindutemple.org/",
+    "googleMapsLink": "https://maps.google.com/?q=42.87661526668789,-85.46057634456851"
+   },
+   {
+    "id": "20",
+    "name": "Hindu Temple Canton",
+    "address": "44955 Cherry Hill Rd, Canton, MI 48188",
+    "state": "Michigan",
+	  "image": "/placeholder.svg?height=200&width=300",
+    "latitude": 42.306152529623915,
+    "longitude": -83.48277392781293,
+    "website": "http://thehindutemple.org/",
+    "googleMapsLink": "https://maps.google.com/?q=42.306152529623915,-83.48277392781293"
+   },
+   {
+    "id": "21",
+    "name": "ISKCON Farmington Hills - Sri Sri Radha Gopijana Vallabha Temple",
+    "address": "36600 Grand River Ave, Farmington Hills, MI 48335",
+    "state": "Michigan",
+	  "image": "/placeholder.svg?height=200&width=300",
+    "latitude": 42.46938913544754,
+    "longitude": -83.40859062036739,
+    "website": "https://www.iskconfarmingtonhills.com/",
+    "googleMapsLink": "https://maps.google.com/?q=42.46938913544754,-83.40859062036739"
+   },
+   {
+    "id": "22",
+    "name": "Sri Sharadamba temple - SVBF North - Sringeri Vidya Bharati Foundation",
+    "address": "26325 Halsted Rd, Farmington Hills, MI 48331",
+    "state": "Michigan",
+	  "image": "/placeholder.svg?height=200&width=300",
+    "latitude": 42.48529357896893,
+    "longitude": -83.4173635988907,
+    "website": "https://www.svbfnorth.org/",
+    "googleMapsLink": "https://maps.google.com/?q=42.48529357896893,-83.4173635988907"
+   },
+   {
+    "id": "23",
+    "name": "Bharatiya Temple of Haslett",
+    "address": "955 Haslett Rd, Haslett, MI 48840",
+    "state": "Michigan",
+	  "image": "/placeholder.svg?height=200&width=300",
+    "latitude": 42.74568221985362,
+    "longitude": -84.38193308394673,
+    "website": "http://www.lansingtemple.org/",
+    "googleMapsLink": "https://maps.google.com/?q=42.74568221985362,-84.38193308394673"
+   },
+   {
+    "id": "24",
+    "name": "Bharatiya Temple of Haslett",
+    "address": "955 Haslett Rd, Haslett, MI 48840",
+    "state": "Michigan",
+	  "image": "/placeholder.svg?height=200&width=300",
+    "latitude": 42.74568221985362,
+    "longitude": -84.38193308394673,
+    "website": "http://www.lansingtemple.org/",
+    "googleMapsLink": "https://maps.google.com/?q=42.74568221985362,-84.38193308394673"
+   },
+   {
+    "id": "25",
+    "name": "The Eternal Mother(Para Shakti) Temple",
+    "address": "551 W Kennett Rd, Pontiac, MI 48340",
+    "state": "Michigan",
+	  "image": "/placeholder.svg?height=200&width=300",
+    "latitude": 42.667602461319106,
+    "longitude": -83.31910848251623,
+    "website": "https://www.parashakthitemple.org/",
+    "googleMapsLink": "https://maps.google.com/?q=42.667602461319106,-83.31910848251623"
+   },
+   {
+    "id": "26",
+    "name": "Michigan Kalibari",
+    "address": "2601 E 9 Mile Rd, Warren, MI 48091",
+    "state": "Michigan",
+	  "image": "/placeholder.svg?height=200&width=300",
+    "latitude": 42.46327780156123,
+    "longitude": -83.07618795210415,
+    "website": "http://www.michigankalibari.org/",
+    "googleMapsLink": "https://maps.google.com/?q=42.46327780156123,-83.07618795210415"
+   },
+   {
+    "id": "27",
+    "name": "Sri Subramanya Swamy Cultural Center",
+    "address": "31618 Grand River Ave, Farmington, MI 48336",
+    "state": "Michigan",
+	  "image": "/placeholder.svg?height=200&width=300",
+    "latitude": 42.4586469401345,
+    "longitude": -83.35867454529532,
+    "website": "https://www.sstmi.org/",
+    "googleMapsLink": "https://maps.google.com/?q=42.4586469401345,-83.35867454529532"
+   },
+   {
+    "id": "28",
+    "name": "Chinmaya Mission Tapovanam",
+    "address": "6499 Calkins Rd, Flint Twp, MI 48532",
+    "state": "Michigan",
+	  "image": "/placeholder.svg?height=200&width=300",
+    "latitude": 43.01573861752786,
+    "longitude": -83.8117168011824,
+    "website": "https://www.chinmayamissionflint.org/",
+    "googleMapsLink": "https://maps.google.com/?q=43.01573861752786,-83.8117168011824"
+   },
+   {
+    "id": "29",
+    "name": "Tri City Hindu Temple",
+    "address": "3311 Temple Ct, Saginaw, MI 48604",
+    "state": "Michigan",
+	  "image": "/placeholder.svg?height=200&width=300",
+    "latitude": 43.48939902969407,
+    "longitude": -83.98061086298303,
+    "website": "http://www.tricityhindutemple.org/",
+    "googleMapsLink": "https://maps.google.com/?q=43.48939902969407,-83.98061086298303"
+   },
+   {
+    "id": "30",
+    "name": "Shirdi Sai Temple",
+    "address": "2652 Crooks Rd, Rochester Hills, MI 48309",
+    "state": "Michigan",
+	  "image": "/placeholder.svg?height=200&width=300",
+    "latitude": 42.64069666512838,
+    "longitude": -83.17259216434617,
+    "website": "http://www.shirdisaimi.org/",
+    "googleMapsLink": "https://maps.google.com/?q=42.64069666512838,-83.17259216434617"
+   },
+   {
+    "id": "31",
+    "name": "Sai Samaj of Saginaw",
+    "address": "3617 Mackinaw St, Saginaw, MI 48602",
+    "state": "Michigan",
+	  "image": "/placeholder.svg?height=200&width=300",
+    "latitude": 43.437242362459074,
+    "longitude": -83.99270831374469,
+    "website": "http://www.saisamajofsaginaw.com/",
+    "googleMapsLink": "https://maps.google.com/?q=43.437242362459074,-83.99270831374469"
+   }
 ]
