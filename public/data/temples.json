@@ -87,6 +87,29 @@
     "image": "/placeholder.svg?height=200&width=300",
     "latitude": 42.452127439865286, 
     "longitude": -83.34998579226921,
+    "googleMapsLink": "https://maps.google.com/?q=42.452127439865286,-83.34998579226921"
+  },
+  {
+    "id": "10",
+    "name": "Sri Shirdi Saibaba Temple",
+    "address": "28875 7 Mile, Livonia, MI 48152",
+    "state": "Michigan",
+    "image": "/placeholder.svg?height=200&width=300",
+    "latitude": 42.42694943678657, 
+    "longitude": -83.33056373402347,
+    "googleMapsLink": "https://maps.google.com/?q=42.42694943678657, -83.33056373402347"
+  }
+]
+
+  },
+  {
+    "id": "9",
+    "name": "Sri Baktha Hanuman Temple",
+    "address": "30687 Grand River Ave, Farmington, MI 48336-4316",
+    "state": "Michigan",
+    "image": "/placeholder.svg?height=200&width=300",
+    "latitude": 42.452127439865286, 
+    "longitude": -83.34998579226921,
     "website":"https://sbhtemple.org/Devotee/Home",
     "googleMapsLink": "https://maps.google.com/?q=42.452127439865286,-83.34998579226921"
   },

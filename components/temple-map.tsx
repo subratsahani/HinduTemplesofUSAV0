@@ -94,6 +94,16 @@ const initialTemples = [
     longitude: -118.7081,
     googleMapsLink: "https://maps.google.com/?q=34.0953,-118.7081",
   },
+  {
+    "id": "9",
+    "name": "Sri Baktha Hanuman Temple",
+    "address": "30687 Grand River Ave, Farmington, MI 48336-4316",
+    "state": "Michigan",
+    "image": "/placeholder.svg?height=200&width=300",
+    "latitude": 42.452127439865286, 
+    "longitude": -83.34998579226921,
+    "googleMapsLink": "https://maps.google.com/?q=42.452127439865286,-83.34998579226921"
+  },
 ]
 
 // Component to recenter map when filters change
@@ -150,16 +160,33 @@ export default function TempleMap() {
   }, [])
 
   // Use the initial data directly instead of fetching
-  useEffect(() => {
-    // We're using the hardcoded data directly
-    setTemples(initialTemples)
-    setFilteredTemples(initialTemples)
-    setStates(getUniqueStates(initialTemples))
-    setIsLoading(false)
+  // useEffect(() => {
+  //   // We're using the hardcoded data directly
+  //   setTemples(initialTemples)
+  //   setFilteredTemples(initialTemples)
+  //   setStates(getUniqueStates(initialTemples))
+  //   setIsLoading(false)
 
-    // Log that we're using hardcoded data
-    console.log("Using hardcoded temple data")
-  }, [])
+  //   // Log that we're using hardcoded data
+  //   console.log("Using hardcoded temple data")
+  // }, [])
+  useEffect(() => {
+    // Fetch the JSON file from the public directory
+    fetch('/data/temples.json')
+      .then((response) => response.json())
+      .then((data) => {
+        setTemples(data);
+        setFilteredTemples(data);
+        setStates(getUniqueStates(data)); // You can keep this logic
+        setIsLoading(false);
+        
+        console.log('Data fetched from temples.json');
+      })
+      .catch((error) => {
+        console.error('Error fetching temples data:', error);
+        setIsLoading(false);
+      });
+  }, []);
 
   // Handle state selection
   const handleStateChange = (value) => {
