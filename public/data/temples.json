@@ -586,5 +586,27 @@
     "longitude": -83.56011543402965,
     "website": "",
     "googleMapsLink": "https://maps.google.com/?q=31.479044586951026,-83.56011543402965"
+   },
+   {
+    "id": "55",
+    "name": "Billings Dharma Center",
+    "address": "741 Custer Ave, Billings, MT 59101",
+    "state": "Montana",
+    "image": "/placeholder.svg?height=200&width=300",
+    "latitude": 45.776222295287866,
+    "longitude": -108.5352700416228,
+    "website": "",
+    "googleMapsLink": "https://maps.google.com/?q=45.776222295287866,-108.5352700416228"
+   },
+   {
+    "id": "56",
+    "name": "Hindu Temple of Fargo - Moorhead",
+    "address": "16 4th St N, Moorhead, MN 56560",
+    "state": "Minnesota",
+    "image": "/placeholder.svg?height=200&width=300",
+    "latitude": 46.87669317269719,
+    "longitude": -96.77571404793676,
+    "website": "http://www.hindutemplefm.org/",
+    "googleMapsLink": "https://maps.google.com/?q=46.87669317269719,-96.77571404793676"
    }
 ]
