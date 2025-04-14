@@ -553,5 +553,38 @@
     "longitude": -84.17853825431172,
     "website": "http://www.sanatanatemple.org/",
     "googleMapsLink": "https://maps.google.com/?q=34.165704818795504,-84.17853825431172"
+   },
+   {
+    "id": "52",
+    "name": "Gokuldham",
+    "address": "2397 Satellite Blvd, Buford, GA 30518",
+    "state": "Georgia",
+    "image": "/placeholder.svg?height=200&width=300",
+    "latitude": 34.08559467177943,
+    "longitude": -83.99989392808138,
+    "website": "http://www.gokuldham.org/",
+    "googleMapsLink": "https://maps.google.com/?q=34.08559467177943,-83.99989392808138"
+   },
+   {
+    "id": "53",
+    "name": "Umiya Mataji Mandir Macon Ga",
+    "address": "4770 Raley Rd, Macon, GA 31206",
+    "state": "Georgia",
+    "image": "/placeholder.svg?height=200&width=300",
+    "latitude": 32.801869347298464,
+    "longitude": -83.73000792484399,
+    "website": "http://www.umiyamataji.com/",
+    "googleMapsLink": "https://maps.google.com/?q=32.801869347298464,-83.73000792484399"
+   },
+   {
+    "id": "54",
+    "name": "Shree Swaminarayan Hindu Temple ISSO",
+    "address": "2167 Whiddon Mill Rd, Tifton, GA 31793",
+    "state": "Georgia",
+    "image": "/placeholder.svg?height=200&width=300",
+    "latitude": 31.479044586951026,
+    "longitude": -83.56011543402965,
+    "website": "",
+    "googleMapsLink": "https://maps.google.com/?q=31.479044586951026,-83.56011543402965"
    }
 ]
