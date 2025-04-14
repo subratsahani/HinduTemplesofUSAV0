@@ -302,6 +302,16 @@ export default function TempleMap() {
                       <div className="p-2">
                         <h3 className="font-bold text-lg">{temple.name}</h3>
                         <p className="text-sm text-muted-foreground">{temple.address}</p>
+                        <div className="flex justify-between mt-3">
+                          <a
+                            href={temple.website}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="text-xs text-blue-600 hover:underline"
+                          >
+                            {temple.website}
+                          </a>
+                        </div>
                         <div className="flex items-center text-xs text-muted-foreground mt-1">
                           <MapPin className="h-3 w-3 mr-1" />
                           <span>
