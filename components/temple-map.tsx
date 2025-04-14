@@ -160,16 +160,33 @@ export default function TempleMap() {
   }, [])
 
   // Use the initial data directly instead of fetching
-  useEffect(() => {
-    // We're using the hardcoded data directly
-    setTemples(initialTemples)
-    setFilteredTemples(initialTemples)
-    setStates(getUniqueStates(initialTemples))
-    setIsLoading(false)
+  // useEffect(() => {
+  //   // We're using the hardcoded data directly
+  //   setTemples(initialTemples)
+  //   setFilteredTemples(initialTemples)
+  //   setStates(getUniqueStates(initialTemples))
+  //   setIsLoading(false)
 
-    // Log that we're using hardcoded data
-    console.log("Using hardcoded temple data")
-  }, [])
+  //   // Log that we're using hardcoded data
+  //   console.log("Using hardcoded temple data")
+  // }, [])
+  useEffect(() => {
+    // Fetch the JSON file from the public directory
+    fetch('/data/temples.json')
+      .then((response) => response.json())
+      .then((data) => {
+        setTemples(data);
+        setFilteredTemples(data);
+        setStates(getUniqueStates(data)); // You can keep this logic
+        setIsLoading(false);
+        
+        console.log('Data fetched from temples.json');
+      })
+      .catch((error) => {
+        console.error('Error fetching temples data:', error);
+        setIsLoading(false);
+      });
+  }, []);
 
   // Handle state selection
   const handleStateChange = (value) => {
