@@ -608,5 +608,16 @@
     "longitude": -96.77571404793676,
     "website": "http://www.hindutemplefm.org/",
     "googleMapsLink": "https://maps.google.com/?q=46.87669317269719,-96.77571404793676"
+   },
+   {
+    "id": "57",
+    "name": "Hindu Temple of SiouxLand",
+    "address": "46656 270th St, Tea, SD 57064",
+    "state": "South Dakota",
+    "image": "/placeholder.svg?height=200&width=300",
+    "latitude": 43.47613516524381,
+    "longitude": -96.87545723781687,
+    "website": "https://hindutemplesd.com/",
+    "googleMapsLink": "https://maps.google.com/?q=43.47613516524381,-96.87545723781687"
    }
 ]
