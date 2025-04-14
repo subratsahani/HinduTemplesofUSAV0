@@ -94,6 +94,16 @@ const initialTemples = [
     longitude: -118.7081,
     googleMapsLink: "https://maps.google.com/?q=34.0953,-118.7081",
   },
+  {
+    "id": "9",
+    "name": "Sri Baktha Hanuman Temple",
+    "address": "30687 Grand River Ave, Farmington, MI 48336-4316",
+    "state": "Michigan",
+    "image": "/placeholder.svg?height=200&width=300",
+    "latitude": 42.452127439865286, 
+    "longitude": -83.34998579226921,
+    "googleMapsLink": "https://maps.google.com/?q=42.452127439865286,-83.34998579226921"
+  },
 ]
 
 // Component to recenter map when filters change
