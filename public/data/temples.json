@@ -373,10 +373,10 @@
     "address": "1450 Huie Rd, Lake City, GA 30260",
     "state": "Georgia",
     "image": "/placeholder.svg?height=200&width=300",
-    "latitude": 33.60390166607767,
-    "longitude": -84.34296058859265,
+    "latitude": 33.600216182252915,
+    "longitude": -84.34313285748162,
     "website": "http://www.ambajiusa.org/",
-    "googleMapsLink": "https://maps.google.com/?q=33.60390166607767,-84.34296058859265"
+    "googleMapsLink": "https://maps.google.com/?q=33.600216182252915,-84.34313285748162"
    },
    {
     "id": "36",
@@ -384,10 +384,10 @@
     "address": "5851 GA-85, Riverdale, GA 30274",
     "state": "Georgia",
     "image": "/placeholder.svg?height=200&width=300",
-    "latitude": 33.60073355653628,
-    "longitude": -84.40892892287759,
+    "latitude": 33.5953896650144, 
+    "longitude": -84.4087605999399,
     "website": "http://www.hindutempleofatlanta.org/",
-    "googleMapsLink": "https://maps.google.com/?q=33.60073355653628,-84.40892892287759"
+    "googleMapsLink": "https://maps.google.com/?q=33.5953896650144,-84.4087605999399"
    },
    {
     "id": "37",
