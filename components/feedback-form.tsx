@@ -36,12 +36,13 @@ export default function FeedbackForm() {
 
     try {
       // Send the feedback data to the API route
-      const response = await fetch("/api/send-feedback", {
+      const response = await fetch("https://api.web3forms.com/submit", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
+          Accept: "application/json",
         },
-        body: JSON.stringify(formData),
+        body: JSON.stringify(access_key: "59ec66c4-6ccb-4f02-9256-b6c28fccf466",formData),
       })
 
       const data = await response.json()
@@ -84,7 +85,7 @@ export default function FeedbackForm() {
         <CardTitle>Submit a Missing Temple</CardTitle>
         <CardDescription>
           Help us improve our database by submitting information about a temple that's not on our map. Your submission
-          will be sent to sahani_90@rediffmail.com for review.
+          will be sent for review.
         </CardDescription>
       </CardHeader>
       <CardContent>
