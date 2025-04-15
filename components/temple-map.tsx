@@ -209,7 +209,9 @@ export default function TempleMap() {
                 click: () => {
                   setSelectedTemple(temple);
                   if (mapRef.current) {
-                    mapRef.current.setView([temple.latitude, temple.longitude], 12); // Adjust zoom level as desired
+                     mapRef.current.setView([temple.latitude, temple.longitude], mapRef.current.getZoom(), {
+                     animate: true,
+                     });
                   }
                 },
               }}
