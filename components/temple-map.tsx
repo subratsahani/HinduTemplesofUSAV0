@@ -220,6 +220,12 @@ export default function TempleMap() {
                      });
                   }
                 },
+                mouseover: (e) => {
+                  e.target.openPopup(); // Show popup on hover
+                },
+                mouseout: (e) => {
+                  e.target.closePopup(); // Hide popup when mouse leaves
+                },
               }}
             >
               <Popup>
