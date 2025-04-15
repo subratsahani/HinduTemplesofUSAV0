@@ -42,7 +42,7 @@ export default function FeedbackForm() {
           "Content-Type": "application/json",
           Accept: "application/json",
         },
-        body: JSON.stringify(access_key: "59ec66c4-6ccb-4f02-9256-b6c28fccf466",formData),
+        body: JSON.stringify(access_key: "59ec66c4-6ccb-4f02-9256-b6c28fccf466",...formData),
       })
 
       const data = await response.json()
