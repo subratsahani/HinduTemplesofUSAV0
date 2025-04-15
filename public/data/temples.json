@@ -248,26 +248,15 @@
     "googleMapsLink": "https://maps.google.com/?q=42.74568221985362,-84.38193308394673"
    },
    {
-    "id": "24",
-    "name": "Bharatiya Temple of Haslett",
-    "address": "955 Haslett Rd, Haslett, MI 48840",
-    "state": "Michigan",
-	  "image": "/placeholder.svg?height=200&width=300",
-    "latitude": 42.74568221985362,
-    "longitude": -84.38193308394673,
-    "website": "http://www.lansingtemple.org/",
-    "googleMapsLink": "https://maps.google.com/?q=42.74568221985362,-84.38193308394673"
-   },
-   {
     "id": "25",
     "name": "The Eternal Mother(Para Shakti) Temple",
     "address": "551 W Kennett Rd, Pontiac, MI 48340",
     "state": "Michigan",
     "image": "/placeholder.svg?height=200&width=300",
-    "latitude": 42.667602461319106,
-    "longitude": -83.31910848251623,
+    "latitude": 42.663955948892905,
+    "longitude": -83.32070751257335,
     "website": "https://www.parashakthitemple.org/",
-    "googleMapsLink": "https://maps.google.com/?q=42.667602461319106,-83.31910848251623"
+    "googleMapsLink": "https://maps.google.com/?q=42.663955948892905,-83.32070751257335"
    },
    {
     "id": "26",
@@ -275,10 +264,10 @@
     "address": "2601 E 9 Mile Rd, Warren, MI 48091",
     "state": "Michigan",
     "image": "/placeholder.svg?height=200&width=300",
-    "latitude": 42.46327780156123,
-    "longitude": -83.07618795210415,
+    "latitude": 42.46236430011693,
+    "longitude": -83.07634593293642,
     "website": "http://www.michigankalibari.org/",
-    "googleMapsLink": "https://maps.google.com/?q=42.46327780156123,-83.07618795210415"
+    "googleMapsLink": "https://maps.google.com/?q=42.46236430011693,-83.07634593293642"
    },
    {
     "id": "27",
