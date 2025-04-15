@@ -12,6 +12,19 @@ import L from "leaflet"
 import { useToast } from "@/components/ui/use-toast"
 import AdminEditModal from "./admin-edit-modal"
 
+// Sample data - fallback in case JSON fetch fails
+const initialTemples = [
+  {
+    id: "1",
+    name: "BAPS Shri Swaminarayan Mandir",
+    address: "460 Rockbridge Rd NW, Lilburn, GA 30047",
+    state: "Georgia",
+    image: "/placeholder.svg?height=200&width=300",
+    latitude: 33.8896,
+    longitude: -84.143,
+    googleMapsLink: "https://maps.google.com/?q=33.8896,-84.1430",
+  }
+]
 // Component to recenter map when filters change
 function MapUpdater({ center }) {
   const map = useMap()
