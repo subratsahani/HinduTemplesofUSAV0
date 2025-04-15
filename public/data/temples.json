@@ -46,9 +46,10 @@
     "address": "1230 S Pennsylvania Ave, Penn Hills, PA 15235",
     "state": "Pennsylvania",
     "image": "/placeholder.svg?height=200&width=300",
-    "latitude": 40.4395,
-    "longitude": -79.8282,
-    "googleMapsLink": "https://maps.google.com/?q=40.4395,-79.8282"
+    "latitude": 40.441042587224004,
+    "longitude": -79.80516824675908,
+    "website":"http://www.svtemple.org/",
+    "googleMapsLink": "https://maps.google.com/?q=40.441042587224004,-79.80516824675908"
   },
   {
     "id": "6",
@@ -619,5 +620,38 @@
     "longitude": -96.87545723781687,
     "website": "https://hindutemplesd.com/",
     "googleMapsLink": "https://maps.google.com/?q=43.47613516524381,-96.87545723781687"
+   },
+   {
+    "id": "58",
+    "name": "HRCC Temple",
+    "address": "137 Bakers Ridge Rd, Morgantown, WV 26508",
+    "state": "West Virginia",
+    "image": "/placeholder.svg?height=200&width=300",
+    "latitude": 39.68791812501105,
+    "longitude": -79.92288275639856,
+    "website": "https://hindutemplesd.com/",
+    "googleMapsLink": "https://maps.google.com/?q=39.68791812501105,-79.92288275639856"
+   },
+   {
+    "id": "59",
+    "name": "BAPS Shri Swaminarayan Mandir, Morgantown WV",
+    "address": "116 Dent Ave, Morgantown, WV 26501",
+    "state": "West Virginia",
+    "image": "/placeholder.svg?height=200&width=300",
+    "latitude": 39.64244130444522,
+    "longitude": -79.98640845300582,
+    "website": "https://www.baps.org/",
+    "googleMapsLink": "https://maps.google.com/?q=39.64244130444522,-79.98640845300582"
+   },
+   {
+    "id": "60",
+    "name": "ISKCON New Vrindaban Inc.",
+    "address": "3759 McCreary's Ridge Rd, Moundsville, WV 26041",
+    "state": "West Virginia",
+    "image": "/placeholder.svg?height=200&width=300",
+    "latitude": 39.9668819732125,
+    "longitude": -80.6068562311428,
+    "website": "http://www.newvrindaban.com/",
+    "googleMapsLink": "https://maps.google.com/?q=39.9668819732125,-80.6068562311428"
    }
 ]
