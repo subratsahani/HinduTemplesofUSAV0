@@ -59,7 +59,8 @@
     "vaul": "^0.9.6",
     "zod": "^3.24.1",
     "leaflet": "latest",
-    "react-leaflet": "latest"
+    "react-leaflet": "latest",
+    "react-leaflet-cluster": "latest"
   },
   "devDependencies": {
     "@types/node": "^22",
