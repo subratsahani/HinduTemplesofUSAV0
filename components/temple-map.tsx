@@ -28,8 +28,13 @@ const initialTemples = [
 // Component to recenter map when filters change
 function MapUpdater({ center }) {
   const map = useMap()
+  const hasUpdatedRef = useRef(false)
+
   useEffect(() => {
-    map.setView(center, 4)
+    if (!hasUpdatedRef.current) {
+      map.setView(center, 4) // your initial zoom level
+      hasUpdatedRef.current = true
+    }
   }, [center, map])
   return null
 }
@@ -209,7 +214,7 @@ export default function TempleMap() {
                 click: () => {
                   setSelectedTemple(temple);
                   if (mapRef.current) {
-                     mapRef.current.setView([temple.latitude, temple.longitude], mapRef.current.getZoom(), {
+                     mapRef.current.flyTo([temple.latitude, temple.longitude], 12, {
                      animate: true,
                      });
                   }
