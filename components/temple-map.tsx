@@ -12,100 +12,6 @@ import L from "leaflet"
 import { useToast } from "@/components/ui/use-toast"
 import AdminEditModal from "./admin-edit-modal"
 
-// Sample data - fallback in case JSON fetch fails
-const initialTemples = [
-  {
-    id: "1",
-    name: "BAPS Shri Swaminarayan Mandir",
-    address: "460 Rockbridge Rd NW, Lilburn, GA 30047",
-    state: "Georgia",
-    image: "/placeholder.svg?height=200&width=300",
-    latitude: 33.8896,
-    longitude: -84.143,
-    googleMapsLink: "https://maps.google.com/?q=33.8896,-84.1430",
-  },
-  {
-    id: "2",
-    name: "Sri Siva Vishnu Temple",
-    address: "6905 Cipriano Rd, Lanham, MD 20706",
-    state: "Maryland",
-    image: "/placeholder.svg?height=200&width=300",
-    latitude: 38.9647,
-    longitude: -76.8483,
-    googleMapsLink: "https://maps.google.com/?q=38.9647,-76.8483",
-  },
-  {
-    id: "3",
-    name: "Hindu Temple of Minnesota",
-    address: "10530 Troy Ln N, Maple Grove, MN 55311",
-    state: "Minnesota",
-    image: "/placeholder.svg?height=200&width=300",
-    latitude: 45.1151,
-    longitude: -93.4659,
-    googleMapsLink: "https://maps.google.com/?q=45.1151,-93.4659",
-  },
-  {
-    id: "4",
-    name: "Shri Swaminarayan Mandir",
-    address: "1020 Tyinn St, Robbinsville, NJ 08691",
-    state: "New Jersey",
-    image: "/placeholder.svg?height=200&width=300",
-    latitude: 40.1973,
-    longitude: -74.6199,
-    googleMapsLink: "https://maps.google.com/?q=40.1973,-74.6199",
-  },
-  {
-    id: "5",
-    name: "Sri Venkateswara Temple",
-    address: "1230 S Pennsylvania Ave, Penn Hills, PA 15235",
-    state: "Pennsylvania",
-    image: "/placeholder.svg?height=200&width=300",
-    latitude: 40.4395,
-    longitude: -79.8282,
-    googleMapsLink: "https://maps.google.com/?q=40.4395,-79.8282",
-  },
-  {
-    id: "6",
-    name: "Hindu Temple of Greater Chicago",
-    address: "10915 Lemont Rd, Lemont, IL 60439",
-    state: "Illinois",
-    image: "/placeholder.svg?height=200&width=300",
-    latitude: 41.6823,
-    longitude: -87.9553,
-    googleMapsLink: "https://maps.google.com/?q=41.6823,-87.9553",
-  },
-  {
-    id: "7",
-    name: "Sri Meenakshi Temple",
-    address: "17130 McLean Rd, Pearland, TX 77584",
-    state: "Texas",
-    image: "/placeholder.svg?height=200&width=300",
-    latitude: 29.559,
-    longitude: -95.3228,
-    googleMapsLink: "https://maps.google.com/?q=29.5590,-95.3228",
-  },
-  {
-    id: "8",
-    name: "Malibu Hindu Temple",
-    address: "1600 Las Virgenes Canyon Rd, Calabasas, CA 91302",
-    state: "California",
-    image: "/placeholder.svg?height=200&width=300",
-    latitude: 34.0953,
-    longitude: -118.7081,
-    googleMapsLink: "https://maps.google.com/?q=34.0953,-118.7081",
-  },
-  {
-    "id": "9",
-    "name": "Sri Baktha Hanuman Temple",
-    "address": "30687 Grand River Ave, Farmington, MI 48336-4316",
-    "state": "Michigan",
-    "image": "/placeholder.svg?height=200&width=300",
-    "latitude": 42.452127439865286, 
-    "longitude": -83.34998579226921,
-    "googleMapsLink": "https://maps.google.com/?q=42.452127439865286,-83.34998579226921"
-  },
-]
-
 // Component to recenter map when filters change
 function MapUpdater({ center }) {
   const map = useMap()
@@ -273,7 +179,9 @@ export default function TempleMap() {
       </div>
 
       <div className="h-[500px] md:h-[600px] rounded-lg overflow-hidden border shadow-md relative z-10">
-        <MapContainer center={center} zoom={4} style={{ height: "100%", width: "100%" }} ref={mapRef}>
+        <MapContainer center={center} zoom={4} style={{ height: "100%", width: "100%" }} whenCreated={(mapInstance) => {
+        mapRef.current = mapInstance;
+        }}>
           <TileLayer
             attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
             url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
@@ -286,7 +194,10 @@ export default function TempleMap() {
               position={[temple.latitude, temple.longitude]}
               eventHandlers={{
                 click: () => {
-                  setSelectedTemple(temple)
+                  setSelectedTemple(temple);
+                  if (mapRef.current) {
+                    mapRef.current.setView([temple.latitude, temple.longitude], 12); // Adjust zoom level as desired
+                  }
                 },
               }}
             >
