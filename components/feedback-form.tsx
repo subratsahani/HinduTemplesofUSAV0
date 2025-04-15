@@ -34,6 +34,7 @@ export default function FeedbackForm() {
     e.preventDefault()
     setIsSubmitting(true)
 
+    // Correct Syntax
     try {
       // Send the feedback data to the API route
       const response = await fetch("https://api.web3forms.com/submit", {
