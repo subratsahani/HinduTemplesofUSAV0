@@ -11,6 +11,7 @@ import { Search, MapPin } from "lucide-react"
 import L from "leaflet"
 import { useToast } from "@/components/ui/use-toast"
 import AdminEditModal from "./admin-edit-modal"
+import MarkerClusterGroup from 'react-leaflet-cluster';
 
 // Sample data - fallback in case JSON fetch fails
 const initialTemples = [
@@ -205,7 +206,7 @@ export default function TempleMap() {
             url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
           />
           <MapUpdater center={center} />
-
+          <MarkerClusterGroup>
           {filteredTemples.map((temple) => (
             <Marker
               key={temple.id}
@@ -281,6 +282,7 @@ export default function TempleMap() {
               </Popup>
             </Marker>
           ))}
+          </MarkerClusterGroup>
         </MapContainer>
       </div>
 
