@@ -240,7 +240,7 @@ export default function TempleMap() {
                       <div className="p-2">
                         <h3 className="font-bold text-lg">{temple.name}</h3>
                         <p className="text-sm text-muted-foreground">{temple.address}</p>
-                        <div className="flex justify-between mt-3">
+                        <div className="text-sm text-muted-foreground">
                           <a
                             href={temple.website}
                             target="_blank"
