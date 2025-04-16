@@ -229,14 +229,15 @@ export default function TempleMap() {
               }}
             >
             <Tooltip direction="top" offset={[0, -20]} opacity={1}>
-              <div className="bg-white p-2 rounded-lg shadow-md text-gray-800 w-52">
-              <div className="font-semibold text-sm">{temple.name}</div>
-              <div className="text-xs text-gray-600">{temple.address}</div>
-              <div className="mt-1 text-[10px] text-gray-500">
-              {temple.latitude.toFixed(4)}, {temple.longitude.toFixed(4)}
-              </div>
+              <div className="bg-white p-2 rounded-lg shadow-md text-gray-800 max-w-xs break-words">
+                <div className="font-semibold text-sm whitespace-normal">{temple.name}</div>
+                <div className="text-xs text-gray-600 whitespace-normal">{temple.address}</div>
+                <div className="mt-1 text-[10px] text-gray-500">
+                  {temple.latitude.toFixed(4)}, {temple.longitude.toFixed(4)}
+                </div>
               </div>
             </Tooltip>
+
               <Popup>
                 <Card className="w-[250px] border-0 shadow-none">
                   <CardContent className="p-0">
