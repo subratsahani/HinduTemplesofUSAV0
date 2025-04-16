@@ -73,15 +73,35 @@ export default function TempleMap() {
   const [isEditModalOpen, setIsEditModalOpen] = useState(false)
   const [states, setStates] = useState(getUniqueStates(initialTemples))
   const [isLoading, setIsLoading] = useState(true)
+
+  const [userLocation, setUserLocation] = useState<[number, number] | null>(null)
+  
   const mapRef = useRef(null)
   const { toast } = useToast()
 
   // Center of USA
-  const center = [39.8283, -98.5795]
+  //const center = [39.8283, -98.5795]
+  // Replace `center` definition
+  const defaultCenter = [39.8283, -98.5795] // fallback center
+  const center = userLocation || defaultCenter // 👈 UPDATED to prefer user location
 
   // Fix Leaflet icon issue
   useEffect(() => {
     fixLeafletIcon()
+
+    // 👇 NEW: Try to get user's location
+  if (navigator.geolocation) {
+    navigator.geolocation.getCurrentPosition(
+      (pos) => {
+        setUserLocation([pos.coords.latitude, pos.coords.longitude])
+        console.log("User location found:", pos.coords)
+      },
+      (err) => {
+        console.warn("Geolocation error:", err)
+      }
+    )
+  }
+    
   }, [])
 
   // Use the initial data directly instead of fetching
@@ -299,6 +319,12 @@ export default function TempleMap() {
             </Marker>
           ))}
           </MarkerClusterGroup>
+          //For user's current location
+          {userLocation && (
+            <Marker position={userLocation}>
+            <Popup>You are here</Popup>
+            </Marker>
+          )}
         </MapContainer>
       </div>
 
