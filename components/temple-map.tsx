@@ -320,11 +320,20 @@ export default function TempleMap() {
           ))}
           </MarkerClusterGroup>
           //For user's current location
-          {userLocation && (
-            <Marker position={userLocation}>
-            <Popup>You are here</Popup>
-            </Marker>
-          )}
+         {userLocation && (
+            <Marker position={userLocation} ref={(marker) => {
+            if (marker) {
+              // Open the popup automatically
+              marker.openPopup()
+              // Close it after 3 seconds
+              setTimeout(() => {
+                marker.closePopup()
+              }, 3000)
+            }
+        }}>
+          <Popup>You are here</Popup>
+          </Marker>
+        )}
         </MapContainer>
       </div>
 
