@@ -1,7 +1,7 @@
 "use client"
 
 import { useState, useEffect, useRef } from "react"
-import { MapContainer, TileLayer, Marker, Popup, useMap } from "react-leaflet"
+import { MapContainer, TileLayer, Marker, Popup, Tooltip, useMap } from "react-leaflet"
 import "leaflet/dist/leaflet.css"
 import { Input } from "@/components/ui/input"
 import { Button } from "@/components/ui/button"
