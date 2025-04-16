@@ -103,7 +103,17 @@ export default function TempleMap() {
   }
     
   }, [])
-
+  <Button
+  onClick={() => {
+    if (mapRef.current && userLocation) {
+      mapRef.current.flyTo(userLocation, 12, {
+        duration: 1.5, // smooth fly animation
+      })
+    }
+  }}
+  >
+  I am here
+  </Button>
   // Use the initial data directly instead of fetching
   // useEffect(() => {
   //   // We're using the hardcoded data directly
