@@ -172,6 +172,22 @@ export default function TempleMap() {
     })
   }
 
+  // Hook to manage popup behavior
+  const PopupControl = ({ markerRef }) => {
+    const map = useMap();
+  
+    useEffect(() => {
+      if (markerRef.current) {
+        markerRef.current.openPopup(); // Automatically open popup
+        setTimeout(() => {
+          markerRef.current.closePopup(); // Close popup after 3 seconds
+        }, 3000);
+      }
+    }, [map, markerRef]);
+  
+    return null;
+  };
+  
   if (isLoading) {
     return (
       <div className="h-[500px] md:h-[600px] rounded-lg overflow-hidden border shadow-md flex items-center justify-center bg-gray-100">
@@ -215,18 +231,6 @@ export default function TempleMap() {
           {isAdmin ? "Exit Admin Mode" : "Admin Mode"}
         </Button> */}
       </div>
-
-      <Button
-        onClick={() => {
-          if (mapRef.current && userLocation) {
-            mapRef.current.flyTo(userLocation, 12, {
-              duration: 1.5, // smooth fly animation
-            })
-          }
-        }}
-      >
-        I am here
-      </Button>
       
       <div className="h-[500px] md:h-[600px] rounded-lg overflow-hidden border shadow-md relative z-10">
         <MapContainer center={center} zoom={4} style={{ height: "100%", width: "100%" }} whenCreated={(mapInstance) => {
@@ -332,19 +336,12 @@ export default function TempleMap() {
           </MarkerClusterGroup>
           //For user's current location
          {userLocation && (
-            <Marker position={userLocation} ref={(marker) => {
-            if (marker) {
-              // Open the popup automatically
-              marker.openPopup()
-              // Close it after 3 seconds
-              setTimeout(() => {
-                marker.closePopup()
-              }, 3000)
-            }
-        }}>
-          <Popup>You are here</Popup>
-          </Marker>
-        )}
+            <Marker position={userLocation} ref={markerRef}>
+              <Popup>You are here</Popup>
+              {/* Control popup opening and closing */}
+              <PopupControl markerRef={markerRef} />
+            </Marker>
+          )}
         </MapContainer>
       </div>
 
