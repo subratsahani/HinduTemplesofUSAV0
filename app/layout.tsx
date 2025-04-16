@@ -8,7 +8,12 @@ export const metadata = {
   title: "Hindu Temples in USA - Interactive Map",
   description:
     "Explore Hindu temples across the United States with our interactive map. Filter by state, search by name, and contribute missing temples.",
-    generator: 'v0.dev'
+    generator: 'v0.dev',
+  icons: {
+     icon: [
+      { url: '/marker-icon-om.png', sizes: '32x32', type: 'image/png' },
+    ],
+  },
 }
 
 export default function RootLayout({ children }) {
