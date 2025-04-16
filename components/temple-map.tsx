@@ -172,6 +172,8 @@ export default function TempleMap() {
     })
   }
 
+  // Reference to the marker
+  const markerRef = useRef(null);
   // Hook to manage popup behavior
   const PopupControl = ({ markerRef }) => {
     const map = useMap();
