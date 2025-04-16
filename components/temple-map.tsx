@@ -336,12 +336,11 @@ export default function TempleMap() {
             </Marker>
           ))}
           </MarkerClusterGroup>
-          //For user's current location
+          
         {/*          
             {userLocation && (
             <Marker position={userLocation} ref={markerRef}>
               <Popup>You are here</Popup>
-              {/* Control popup opening and closing */}
               <PopupControl markerRef={markerRef} />
             </Marker>
             )} 
