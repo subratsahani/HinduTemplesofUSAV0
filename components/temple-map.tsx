@@ -49,7 +49,7 @@ const fixLeafletIcon = () => {
       iconUrl: "/marker-icon-om.png",
       iconRetinaUrl: "/marker-icon-om.png",
       shadowUrl: "/marker-shadow.png",
-      iconSize: [25, 41],
+      iconSize: [39, 41],
       iconAnchor: [12, 41],
       popupAnchor: [1, -34],
       shadowSize: [41, 41],
