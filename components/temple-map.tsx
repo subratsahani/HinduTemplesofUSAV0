@@ -90,17 +90,17 @@ export default function TempleMap() {
     fixLeafletIcon()
 
     // 👇 NEW: Try to get user's location
-  if (navigator.geolocation) {
-    navigator.geolocation.getCurrentPosition(
-      (pos) => {
-        setUserLocation([pos.coords.latitude, pos.coords.longitude])
-        console.log("User location found:", pos.coords)
-      },
-      (err) => {
-        console.warn("Geolocation error:", err)
-      }
-    )
-  }
+  // if (navigator.geolocation) {
+  //   navigator.geolocation.getCurrentPosition(
+  //     (pos) => {
+  //       setUserLocation([pos.coords.latitude, pos.coords.longitude])
+  //       console.log("User location found:", pos.coords)
+  //     },
+  //     (err) => {
+  //       console.warn("Geolocation error:", err)
+  //     }
+  //   )
+  // }
     
   }, [])
   // Use the initial data directly instead of fetching
@@ -172,23 +172,23 @@ export default function TempleMap() {
     })
   }
 
-  // Reference to the marker
-  const markerRef = useRef(null);
-  // Hook to manage popup behavior
-  const PopupControl = ({ markerRef }) => {
-    const map = useMap();
+  // // Reference to the marker
+  // const markerRef = useRef(null);
+  // // Hook to manage popup behavior
+  // const PopupControl = ({ markerRef }) => {
+  //   const map = useMap();
   
-    useEffect(() => {
-      if (markerRef.current) {
-        markerRef.current.openPopup(); // Automatically open popup
-        setTimeout(() => {
-          markerRef.current.closePopup(); // Close popup after 3 seconds
-        }, 3000);
-      }
-    }, [map, markerRef]);
+  //   useEffect(() => {
+  //     if (markerRef.current) {
+  //       markerRef.current.openPopup(); // Automatically open popup
+  //       setTimeout(() => {
+  //         markerRef.current.closePopup(); // Close popup after 3 seconds
+  //       }, 3000);
+  //     }
+  //   }, [map, markerRef]);
   
-    return null;
-  };
+  //   return null;
+  // };
   
   if (isLoading) {
     return (
@@ -337,13 +337,13 @@ export default function TempleMap() {
           ))}
           </MarkerClusterGroup>
           //For user's current location
-         {userLocation && (
+{/*          {userLocation && (
             <Marker position={userLocation} ref={markerRef}>
               <Popup>You are here</Popup>
               {/* Control popup opening and closing */}
               <PopupControl markerRef={markerRef} />
             </Marker>
-          )}
+          )} */}
         </MapContainer>
       </div>
 
