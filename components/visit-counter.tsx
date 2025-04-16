@@ -57,35 +57,22 @@
 
 "use client"
 
-import { useEffect, useRef } from "react"
 import { Card, CardContent } from "@/components/ui/card"
 import { Eye } from "lucide-react"
 
 export default function VisitCounter() {
-  const counterRef = useRef<HTMLDivElement>(null)
-
-  useEffect(() => {
-    if (typeof window === "undefined") return
-
-    // Create and append the external script
-    const script = document.createElement("script")
-    script.src = "https://www.freevisitorcounters.com/en/home/counter/1327990/t/2"
-    script.type = "text/javascript"
-    script.async = true
-
-    // Inject into the container
-    if (counterRef.current) {
-      counterRef.current.innerHTML = "" // Clear previous content
-      counterRef.current.appendChild(script)
-    }
-  }, [])
-
   return (
     <div className="flex justify-center">
       <Card className="w-auto inline-flex">
         <CardContent className="flex items-center space-x-2 py-4">
           <Eye className="h-4 w-4 text-muted-foreground" />
-          <div ref={counterRef} />
+          <a href="http://www.freevisitorcounters.com" target="_blank" rel="noopener noreferrer">
+            <img
+              src="https://www.freevisitorcounters.com/en/home/counter/1327990/t/2"
+              alt="Visitor Counter"
+              style={{ height: "18px" }}
+            />
+          </a>
         </CardContent>
       </Card>
     </div>
