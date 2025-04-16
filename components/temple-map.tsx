@@ -103,17 +103,6 @@ export default function TempleMap() {
   }
     
   }, [])
-  <Button
-  onClick={() => {
-    if (mapRef.current && userLocation) {
-      mapRef.current.flyTo(userLocation, 12, {
-        duration: 1.5, // smooth fly animation
-      })
-    }
-  }}
-  >
-  I am here
-  </Button>
   // Use the initial data directly instead of fetching
   // useEffect(() => {
   //   // We're using the hardcoded data directly
@@ -227,6 +216,18 @@ export default function TempleMap() {
         </Button> */}
       </div>
 
+      <Button
+        onClick={() => {
+          if (mapRef.current && userLocation) {
+            mapRef.current.flyTo(userLocation, 12, {
+              duration: 1.5, // smooth fly animation
+            })
+          }
+        }}
+      >
+        I am here
+      </Button>
+      
       <div className="h-[500px] md:h-[600px] rounded-lg overflow-hidden border shadow-md relative z-10">
         <MapContainer center={center} zoom={4} style={{ height: "100%", width: "100%" }} whenCreated={(mapInstance) => {
         mapRef.current = mapInstance;
