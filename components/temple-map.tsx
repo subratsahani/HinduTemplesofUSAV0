@@ -47,7 +47,7 @@ const fixLeafletIcon = () => {
     delete L.Icon.Default.prototype._getIconUrl
     L.Icon.Default.mergeOptions({
       iconUrl: "/marker-icon-om.png",
-      iconRetinaUrl: "/marker-icon-2x.png",
+      iconRetinaUrl: "/marker-icon-om.png",
       shadowUrl: "/marker-shadow.png",
       iconSize: [25, 41],
       iconAnchor: [12, 41],
