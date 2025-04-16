@@ -57,47 +57,37 @@
 
 "use client"
 
-import { useEffect, useState } from "react"
+import { useEffect, useRef } from "react"
 import { Card, CardContent } from "@/components/ui/card"
 import { Eye } from "lucide-react"
 
 export default function VisitCounter() {
-  const [scriptLoaded, setScriptLoaded] = useState(false)
+  const counterRef = useRef<HTMLDivElement>(null)
 
   useEffect(() => {
-    // Only run this on the client side
-    if (typeof window !== "undefined" && !scriptLoaded) {
-      // Dynamically add the first script
-      const authScript = document.createElement("script")
-      authScript.src = "https://www.freevisitorcounters.com/auth.php?id=4f91642b8dd1c237c9953905105daf1ab719a347"
-      authScript.type = "text/javascript"
-      authScript.async = true
-      document.body.appendChild(authScript)
+    if (typeof window === "undefined") return
 
-      // Dynamically add the second script
-      const counterScript = document.createElement("script")
-      counterScript.src = "https://www.freevisitorcounters.com/en/home/counter/1327990/t/2"
-      counterScript.type = "text/javascript"
-      counterScript.async = true
-      document.body.appendChild(counterScript)
+    // Create and append the external script
+    const script = document.createElement("script")
+    script.src = "https://www.freevisitorcounters.com/en/home/counter/1327990/t/2"
+    script.type = "text/javascript"
+    script.async = true
 
-      setScriptLoaded(true)
+    // Inject into the container
+    if (counterRef.current) {
+      counterRef.current.innerHTML = "" // Clear previous content
+      counterRef.current.appendChild(script)
     }
-  }, [scriptLoaded])
+  }, [])
 
   return (
     <div className="flex justify-center">
       <Card className="w-auto inline-flex">
         <CardContent className="flex items-center space-x-2 py-4">
           <Eye className="h-4 w-4 text-muted-foreground" />
-          <span className="text-sm text-muted-foreground">
-            <a href="http://www.freevisitorcounters.com" target="_blank" rel="noopener noreferrer">
-              View Page Counter
-            </a>
-          </span>
+          <div ref={counterRef} />
         </CardContent>
       </Card>
     </div>
   )
 }
-
