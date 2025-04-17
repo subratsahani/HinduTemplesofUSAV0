@@ -11,21 +11,6 @@ export default function Home() {
       <header className="bg-orange-600 text-white p-4 shadow-md">
         <div className="container mx-auto">
           <h1 className="text-2xl md:text-3xl font-bold text-center">Hindu Temples in the USA</h1>
-          <div className="ml-auto">
-            <Dialog>
-              <DialogTrigger asChild>
-                <button
-                  className="text-white hover:text-orange-200 transition"
-                  aria-label="Info"
-                >
-                  <Info className="w-6 h-6" />
-                </button>
-              </DialogTrigger>
-              <DialogContent>
-                <p>This map shows Hindu temples across the USA. You can zoom in, click markers, and submit feedback below.</p>
-              </DialogContent>
-            </Dialog>
-          </div>
         </div>
       </header>
 
