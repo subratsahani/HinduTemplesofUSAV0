@@ -1,3 +1,5 @@
+import { Dialog, DialogContent, DialogTrigger } from "@/components/ui/dialog"
+import { Info } from "lucide-react"
 import FeedbackForm from "@/components/feedback-form"
 import { Toaster } from "@/components/ui/toaster"
 import VisitCounter from "@/components/visit-counter"
