@@ -7,15 +7,22 @@ import InfoPopup from "@/components/info-popup"
 export default function Home() {
   return (
     <main className="min-h-screen flex flex-col">
-      <header className="bg-orange-600 text-white p-4 shadow-md relative">
-        <div className="container mx-auto">
-          {/* Centered title */}
-          <h1 className="text-2xl md:text-3xl font-bold text-center">Hindu Temples in the USA</h1>
+      <header className="bg-orange-600 text-white p-4 shadow-md">
+        <div className="container mx-auto flex flex-col items-center">
+          {/* Mobile-friendly layout with stacked elements */}
+          <div className="w-full flex justify-center items-center relative mb-1">
+            <h1 className="text-xl sm:text-2xl md:text-3xl font-bold text-center px-8">Hindu Temples in the USA</h1>
 
-          {/* Info button positioned absolutely in the top-right */}
-          <div className="absolute right-4 top-1/2 transform -translate-y-1/2">
-            <InfoPopup />
+            {/* Info button positioned to the right of the title on all screen sizes */}
+            <div className="absolute right-0">
+              <InfoPopup />
+            </div>
           </div>
+
+          {/* Optional subtitle that only shows on larger screens */}
+          <p className="text-xs sm:text-sm text-orange-100 text-center hidden sm:block">
+            An interactive map of Hindu temples across the United States
+          </p>
         </div>
       </header>
 
