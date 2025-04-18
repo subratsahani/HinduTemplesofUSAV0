@@ -1171,5 +1171,60 @@
     "longitude": -88.27640492641078,
     "website":"http://champaignhindutemple.org/",
     "googleMapsLink": "https://maps.google.com/?q=40.19012519274867,-88.27640492641078"
+  },
+  {
+    "id": "108",
+    "name": "Vivekananda House UIUC",
+    "address": "806 W Springfield Ave, Urbana, IL 61801",
+    "state": "Illinois",
+    "image": "/placeholder.svg?height=200&width=300",
+    "latitude": 40.112959343476696,
+    "longitude": -88.21847602972876,
+    "website":"https://www.vivekanandahouseus.org/",
+    "googleMapsLink": "https://maps.google.com/?q=40.112959343476696,-88.21847602972876"
+  },
+  {
+    "id": "109",
+    "name": "Hindu Temple of Bloomington Normal",
+    "address": "1815 Tullamore Ave, Bloomington, IL 61704",
+    "state": "Illinois",
+    "image": "/placeholder.svg?height=200&width=300",
+    "latitude": 40.455018984310854,
+    "longitude": -88.91499717946469,
+    "website":"http://www.ourhindutemple.org/",
+    "googleMapsLink": "https://maps.google.com/?q=40.455018984310854,-88.91499717946469"
+  },
+  {
+    "id": "110",
+    "name": "Sai Samsthan of Central Illinois",
+    "address": "407 Bronco Dr, Bloomington, IL 61704",
+    "state": "Illinois",
+    "image": "/placeholder.svg?height=200&width=300",
+    "latitude": 40.47050872838099,
+    "longitude": -88.90635524557906,
+    "website":"http://saisamsthan.org/",
+    "googleMapsLink": "https://maps.google.com/?q=40.47050872838099,-88.90635524557906"
+  },
+  {
+    "id": "111",
+    "name": "BAPS Shri Swaminarayan Mandir, Bloomington",
+    "address": "1414 Leslie Dr, Bloomington, IL 61704",
+    "state": "Illinois",
+    "image": "/placeholder.svg?height=200&width=300",
+    "latitude": 40.501760031012324,
+    "longitude": -88.90462806599513,
+    "website":"http://www.baps.org/bloomington",
+    "googleMapsLink": "https://maps.google.com/?q=40.501760031012324,-88.90462806599513"
+  },
+  {
+    "id": "112",
+    "name": "Hindu Temple Of Central Illinois",
+    "address": "4210 W Temple Hill Rd, Peoria, IL 61604",
+    "state": "Illinois",
+    "image": "/placeholder.svg?height=200&width=300",
+    "latitude": 40.696045362093734,
+    "longitude": -89.65991848169806,
+    "website":"https://hinduheritage.wildapricot.org/",
+    "googleMapsLink": "https://maps.google.com/?q=40.696045362093734,-89.65991848169806"
   }
 ]
