@@ -1226,5 +1226,27 @@
     "longitude": -89.65991848169806,
     "website":"https://hinduheritage.wildapricot.org/",
     "googleMapsLink": "https://maps.google.com/?q=40.696045362093734,-89.65991848169806"
+  },
+  {
+    "id": "113",
+    "name": "Shri Mahalakshmi Temple - The Hindu Temple of Greater Springfield",
+    "address": "1001 W Walnut St, Chatham, IL 62629",
+    "state": "Illinois",
+    "image": "/placeholder.svg?height=200&width=300",
+    "latitude": 39.67701130256328,
+    "longitude": -89.7205930936802,
+    "website":"http://www.springfieldtemple.org/",
+    "googleMapsLink": "https://maps.google.com/?q=39.67701130256328,-89.7205930936802"
+  },
+  {
+    "id": "114",
+    "name": "Shree Swaminarayan Gurukul",
+    "address": "3150 Chatham Rd, Springfield, IL 62704",
+    "state": "Illinois",
+    "image": "/placeholder.svg?height=200&width=300",
+    "latitude": 39.76167901165696,
+    "longitude": -89.68612024301125,
+    "website":"http://rajkotgurukul.com/",
+    "googleMapsLink": "https://maps.google.com/?q=39.76167901165696,-89.68612024301125"
   }
 ]
