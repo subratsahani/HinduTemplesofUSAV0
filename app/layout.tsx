@@ -75,6 +75,7 @@ export default function RootLayout({ children }) {
   return (
     <html lang="en">
       <head>
+        <meta name="google-site-verification" content="hjtCRNafefL4uisBh4SCrYyUx2H66GbpKKs96oIl3dw" />
         <link
           rel="stylesheet"
           href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
