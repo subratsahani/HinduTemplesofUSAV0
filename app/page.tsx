@@ -3,10 +3,14 @@ import { Toaster } from "@/components/ui/toaster"
 import VisitCounter from "@/components/visit-counter"
 import MapWrapper from "@/components/map-wrapper"
 import InfoPopup from "@/components/info-popup"
+import StructuredData from "@/components/structured-data"
+import SeoFooter from "@/components/seo-footer"
 
 export default function Home() {
   return (
     <main className="min-h-screen flex flex-col">
+      {/* Add structured data for SEO */}
+      <StructuredData />
       <header className="bg-orange-600 text-white p-4 shadow-md">
         <div className="container mx-auto flex flex-col items-center">
           {/* Mobile-friendly layout with stacked elements */}
@@ -35,6 +39,8 @@ export default function Home() {
           <FeedbackForm />
           <div className="border-t pt-4">
             <VisitCounter />
+            {/* Add SEO-rich footer */}
+            <SeoFooter />
           </div>
         </div>
       </footer>
