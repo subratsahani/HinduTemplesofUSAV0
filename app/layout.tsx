@@ -14,6 +14,61 @@ export const metadata = {
       { url: '/marker-icon-om.png', sizes: '32x32', type: 'image/png' },
     ],
   },
+  keywords:
+    "Hindu temples, USA temples, Hindu worship, mandir directory, temple locations, Hindu community, temple map, BAPS temples, Swaminarayan temples, Shiva temples, Vishnu temples",
+  authors: [{ name: "Hindu Temples USA Map" }],
+  creator: "Hindu Temples USA Map",
+  publisher: "Hindu Temples USA Map",
+  formatDetection: {
+    email: false,
+    address: false,
+    telephone: false,
+  },
+  metadataBase: new URL("https://hindutemplesofusa.com"), // Replace with your actual domain
+  alternates: {
+    canonical: "/",
+  },
+  openGraph: {
+    title: "Hindu Temples in USA - Interactive Map & Directory",
+    description:
+      "Explore a comprehensive interactive map of Hindu temples across the United States. Find temple locations, contact information, and directions.",
+    url: "https://hindutemplesofusa.com", 
+    siteName: "Hindu Temples USA Map",
+    images: [
+      {
+        url: "/marker-icon-om.png", 
+        width: 1200,
+        height: 630,
+        alt: "Hindu Temples USA Map",
+      },
+    ],
+    locale: "en_US",
+    type: "website",
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "Hindu Temples in USA - Interactive Map & Directory",
+    description:
+      "Explore a comprehensive interactive map of Hindu temples across the United States. Find temple locations, contact information, and directions.",
+    images: ["/marker-icon-om.png"], 
+  },
+  robots: {
+    index: true,
+    follow: true,
+    googleBot: {
+      index: true,
+      follow: true,
+      "max-video-preview": -1,
+      "max-image-preview": "large",
+      "max-snippet": -1,
+    },
+  },
+  verification: {
+    // Add these once you have them
+    google: "hjtCRNafefL4uisBh4SCrYyUx2H66GbpKKs96oIl3dw",
+    // yandex: "yandex-verification-code",
+    // bing: "bing-verification-code",
+  },
 }
 
 export default function RootLayout({ children }) {
