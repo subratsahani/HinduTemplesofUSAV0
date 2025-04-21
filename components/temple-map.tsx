@@ -115,51 +115,51 @@ export default function TempleMap() {
   //   console.log("Using hardcoded temple data")
   // }, [])
   
-  useEffect(() => {
-    // Fetch the JSON file from the public directory
-    fetch('/data/temples.json')
-      .then((response) => response.json())
-      .then((data) => {
-        setTemples(data);
-        setFilteredTemples(data);
-        setStates(getUniqueStates(data)); // You can keep this logic
-        setIsLoading(false);
-        
-        console.log('Data fetched from temples.json');
-      })
-      .catch((error) => {
-        console.error('Error fetching temples data:', error);
-        setIsLoading(false);
-      });
-  }, []);
-
   // useEffect(() => {
-  //   // Set loading state
-  //   setIsLoading(true);
-    
-  //   // Call your API route instead of the static JSON file
-  //   fetch('/api/temples')
-  //     .then((response) => {
-  //       if (!response.ok) {
-  //         throw new Error('Network response was not ok');
-  //       }
-  //       return response.json();
-  //     })
+  //   // Fetch the JSON file from the public directory
+  //   fetch('/data/temples.json')
+  //     .then((response) => response.json())
   //     .then((data) => {
-  //       // Assuming your API returns { temples: [...] }
-  //       const templeData = data.temples || data; // Handle both formats
-  //       setTemples(templeData);
-  //       setFilteredTemples(templeData);
-  //       setStates(getUniqueStates(templeData)); // You can keep this logic
+  //       setTemples(data);
+  //       setFilteredTemples(data);
+  //       setStates(getUniqueStates(data)); // You can keep this logic
   //       setIsLoading(false);
         
-  //       console.log('Data fetched from API');
+  //       console.log('Data fetched from temples.json');
   //     })
   //     .catch((error) => {
   //       console.error('Error fetching temples data:', error);
   //       setIsLoading(false);
   //     });
   // }, []);
+
+  useEffect(() => {
+    // Set loading state
+    setIsLoading(true);
+    
+    // Call your API route instead of the static JSON file
+    fetch('/api/temples')
+      .then((response) => {
+        if (!response.ok) {
+          throw new Error('Network response was not ok');
+        }
+        return response.json();
+      })
+      .then((data) => {
+        // Assuming your API returns { temples: [...] }
+        const templeData = data.temples || data; // Handle both formats
+        setTemples(templeData);
+        setFilteredTemples(templeData);
+        setStates(getUniqueStates(templeData)); // You can keep this logic
+        setIsLoading(false);
+        
+        console.log('Data fetched from API');
+      })
+      .catch((error) => {
+        console.error('Error fetching temples data:', error);
+        setIsLoading(false);
+      });
+  }, []);
   
   // Handle state selection
   const handleStateChange = (value) => {
