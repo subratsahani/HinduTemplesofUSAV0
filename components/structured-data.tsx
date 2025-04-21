@@ -35,7 +35,7 @@ export default function StructuredData() {
       {
         "@type": "DataDownload",
         encodingFormat: "application/json",
-        contentUrl: "https://hindutemplesofusa.com/api/temples", // Replace with your actual API endpoint if you have one
+        contentUrl: "https://hindutemplesofusa.com/api/send-feedback", // Replace with your actual API endpoint if you have one
       },
     ],
   }
