@@ -220,7 +220,7 @@ export default function TempleMap() {
   const loadGeocodedTemples = async () => {
     const results = await Promise.all(
       filteredTemples.map(async (temple) => {
-        const fullAddress = formatAddress(temple.resource.physicalAddress);
+        const fullAddress = formatAddress(resource.physicalAddress);
         const coords = await geocodeAddress(fullAddress);
         if (coords) {
           return { ...temple, lat: coords.lat, lon: coords.lon };
