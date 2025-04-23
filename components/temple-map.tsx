@@ -79,6 +79,20 @@ export default function TempleMap() {
   const mapRef = useRef(null)
   const { toast } = useToast()
 
+  const [geocodedTemples, setGeocodedTemples] = useState([]);
+
+  const geocodeAddress = async (address: string) => {
+    const res = await fetch(`https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(address)}`);
+    const data = await res.json();
+    if (data.length > 0) {
+      return {
+        lat: parseFloat(data[0].lat),
+        lon: parseFloat(data[0].lon),
+      };
+    }
+    return null;
+  };
+  
   // Center of USA
   //const center = [39.8283, -98.5795]
   // Replace `center` definition
@@ -191,6 +205,23 @@ export default function TempleMap() {
     setFilteredTemples(filtered)
   }, [searchTerm, selectedState, temples])
 
+  useEffect(() => {
+  const loadGeocodedTemples = async () => {
+    const results = await Promise.all(
+      filteredTemples.map(async (temple) => {
+        const coords = await geocodeAddress(temple.address);
+        if (coords) {
+          return { ...temple, lat: coords.lat, lon: coords.lon };
+        }
+        return null;
+      })
+    );
+    setGeocodedTemples(results.filter(Boolean));
+  };
+
+  loadGeocodedTemples();
+  }, [filteredTemples]);
+  
   // Handle temple update from admin
   const handleTempleUpdate = (updatedTemple) => {
     setTemples(temples.map((temple) => (temple.id === updatedTemple.id ? updatedTemple : temple)))
@@ -273,7 +304,7 @@ export default function TempleMap() {
           />
           <MapUpdater center={center} />
           <MarkerClusterGroup>
-          {filteredTemples.map((temple) => (
+          {geocodedTemples.map((temple) => (
             <Marker
               key={temple.id}
               position={[temple.latitude, temple.longitude]}
@@ -299,7 +330,9 @@ export default function TempleMap() {
                 <div className="font-semibold text-sm whitespace-normal">{temple.name}</div>
                 <div className="text-xs text-gray-600 whitespace-normal">{temple.address}</div>
                 <div className="mt-1 text-[10px] text-gray-500">
-                  {temple.latitude.toFixed(4)}, {temple.longitude.toFixed(4)}
+                  {temple.latitude != null && temple.longitude != null
+                  ? `${temple.latitude.toFixed(4)}, ${temple.longitude.toFixed(4)}`
+                  : "Location not available"}
                 </div>
               </div>
             </Tooltip>
@@ -329,7 +362,9 @@ export default function TempleMap() {
                         <div className="flex items-center text-xs text-muted-foreground mt-1">
                           <MapPin className="h-3 w-3 mr-1" />
                           <span>
-                            {temple.latitude.toFixed(4)}, {temple.longitude.toFixed(4)}
+                            {temple.latitude != null && temple.longitude != null
+                            ? `${temple.latitude.toFixed(4)}, ${temple.longitude.toFixed(4)}`
+                            : "Location not available"}
                           </span>
                         </div>
                         <div className="flex justify-between mt-3">
