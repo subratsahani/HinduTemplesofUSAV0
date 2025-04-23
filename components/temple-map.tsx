@@ -26,6 +26,7 @@ const initialTemples = [
     googleMapsLink: "https://maps.google.com/?q=33.8896,-84.1430",
   }
 ]
+
 // Component to recenter map when filters change
 function MapUpdater({ center }) {
   const map = useMap()
@@ -79,90 +80,40 @@ export default function TempleMap() {
   const mapRef = useRef(null)
   const { toast } = useToast()
 
-  const [geocodedTemples, setGeocodedTemples] = useState([]);
+  const [geocodedTemples, setGeocodedTemples] = useState([])
 
-  const geocodeAddress = async (address: string) => {
-    const res = await fetch(`https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(address)}`);
-    const data = await res.json();
-    if (data.length > 0) {
-      return {
-        lat: parseFloat(data[0].lat),
-        lon: parseFloat(data[0].lon),
-      };
+  // Geocode function using Nominatim
+  const geocodeAddress = async (address) => {
+    try {
+      const res = await fetch(`https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(address)}`);
+      const data = await res.json();
+      if (data.length > 0) {
+        return {
+          latitude: parseFloat(data[0].lat),
+          longitude: parseFloat(data[0].lon),
+        };
+      }
+      return null;
+    } catch (error) {
+      console.error("Geocoding error:", error);
+      return null;
     }
-    return null;
   };
 
-  const formatAddress = (addr: any): string => {
-  const parts = [
-      addr.line1,
-      addr.line2,
-      addr.city,
-      addr.state,
-      addr.zipcode,
-      addr.country || "USA" // Default to USA if country is null
-    ]
-    return parts.filter(Boolean).join(', ')
-  };
-  // Center of USA
-  //const center = [39.8283, -98.5795]
-  // Replace `center` definition
+  // Default center of USA
   const defaultCenter = [39.8283, -98.5795] // fallback center
-  const center = userLocation || defaultCenter // 👈 UPDATED to prefer user location
+  const center = userLocation || defaultCenter
 
   // Fix Leaflet icon issue
   useEffect(() => {
-    fixLeafletIcon()
-
-    // 👇 NEW: Try to get user's location
-  // if (navigator.geolocation) {
-  //   navigator.geolocation.getCurrentPosition(
-  //     (pos) => {
-  //       setUserLocation([pos.coords.latitude, pos.coords.longitude])
-  //       console.log("User location found:", pos.coords)
-  //     },
-  //     (err) => {
-  //       console.warn("Geolocation error:", err)
-  //     }
-  //   )
-  // }
-    
+    fixLeafletIcon()    
   }, [])
-  // Use the initial data directly instead of fetching
-  // useEffect(() => {
-  //   // We're using the hardcoded data directly
-  //   setTemples(initialTemples)
-  //   setFilteredTemples(initialTemples)
-  //   setStates(getUniqueStates(initialTemples))
-  //   setIsLoading(false)
-
-  //   // Log that we're using hardcoded data
-  //   console.log("Using hardcoded temple data")
-  // }, [])
   
-  // useEffect(() => {
-  //   // Fetch the JSON file from the public directory
-  //   fetch('/data/temples.json')
-  //     .then((response) => response.json())
-  //     .then((data) => {
-  //       setTemples(data);
-  //       setFilteredTemples(data);
-  //       setStates(getUniqueStates(data)); // You can keep this logic
-  //       setIsLoading(false);
-        
-  //       console.log('Data fetched from temples.json');
-  //     })
-  //     .catch((error) => {
-  //       console.error('Error fetching temples data:', error);
-  //       setIsLoading(false);
-  //     });
-  // }, []);
-
   useEffect(() => {
     // Set loading state
     setIsLoading(true);
     
-    // Call your API route instead of the static JSON file
+    // Call your API route
     fetch('/api/temples')
       .then((response) => {
         if (!response.ok) {
@@ -170,19 +121,61 @@ export default function TempleMap() {
         }
         return response.json();
       })
-      .then((data) => {
+      .then(async (data) => {
         // Assuming your API returns { temples: [...] }
-        const templeData = data.temples || data; // Handle both formats
-        setTemples(templeData);
-        setFilteredTemples(templeData);
-        setStates(getUniqueStates(templeData)); // You can keep this logic
+        const templeData = data.temples || data;
+        
+        // Process temples with geocoding
+        const processedTemples = await Promise.all(
+          templeData.map(async (temple) => {
+            // If the temple already has coordinates, use them
+            if (temple.latitude && temple.longitude) {
+              return {
+                ...temple,
+                googleMapsLink: `https://maps.google.com/?q=${temple.latitude},${temple.longitude}`
+              };
+            }
+            
+            // Otherwise, geocode the address
+            const coords = await geocodeAddress(temple.address);
+            if (coords) {
+              return {
+                ...temple,
+                latitude: coords.latitude,
+                longitude: coords.longitude,
+                googleMapsLink: `https://maps.google.com/?q=${coords.latitude},${coords.longitude}`
+              };
+            }
+            
+            // Return the temple without coordinates if geocoding fails
+            return temple;
+          })
+        );
+        
+        // Filter out temples without coordinates
+        const geocodedTemples = processedTemples.filter(
+          temple => temple.latitude && temple.longitude
+        );
+        
+        setTemples(geocodedTemples);
+        setFilteredTemples(geocodedTemples);
+        setStates(getUniqueStates(geocodedTemples));
         setIsLoading(false);
         
-        console.log('Data fetched from API');
+        console.log('Data fetched and geocoded:', geocodedTemples.length);
       })
       .catch((error) => {
         console.error('Error fetching temples data:', error);
         setIsLoading(false);
+        
+        // Use initial data as fallback
+        setTemples(initialTemples);
+        setFilteredTemples(initialTemples);
+        toast({
+          title: "Error loading temples",
+          description: "Using default data instead. Please try again later.",
+          variant: "destructive"
+        });
       });
   }, []);
   
@@ -209,30 +202,14 @@ export default function TempleMap() {
     if (searchTerm) {
       const term = searchTerm.toLowerCase()
       filtered = filtered.filter(
-        (temple) => temple.name.toLowerCase().includes(term) || temple.address.toLowerCase().includes(term),
+        (temple) => 
+          temple.name.toLowerCase().includes(term) || 
+          temple.address.toLowerCase().includes(term)
       )
     }
 
     setFilteredTemples(filtered)
   }, [searchTerm, selectedState, temples])
-
-  useEffect(() => {
-  const loadGeocodedTemples = async () => {
-    const results = await Promise.all(
-      filteredTemples.map(async (temple) => {
-        const fullAddress = formatAddress(resource.physicalAddress);
-        const coords = await geocodeAddress(fullAddress);
-        if (coords) {
-          return { ...temple, lat: coords.lat, lon: coords.lon };
-        }
-        return null;
-      })
-    );
-    setGeocodedTemples(results.filter(Boolean));
-  };
-
-  loadGeocodedTemples();
-  }, [filteredTemples]);
   
   // Handle temple update from admin
   const handleTempleUpdate = (updatedTemple) => {
@@ -243,24 +220,6 @@ export default function TempleMap() {
       description: `${updatedTemple.name} has been updated successfully.`,
     })
   }
-
-  // // Reference to the marker
-  // const markerRef = useRef(null);
-  // // Hook to manage popup behavior
-  // const PopupControl = ({ markerRef }) => {
-  //   const map = useMap();
-  
-  //   useEffect(() => {
-  //     if (markerRef.current) {
-  //       markerRef.current.openPopup(); // Automatically open popup
-  //       setTimeout(() => {
-  //         markerRef.current.closePopup(); // Close popup after 3 seconds
-  //       }, 3000);
-  //     }
-  //   }, [map, markerRef]);
-  
-  //   return null;
-  // };
   
   if (isLoading) {
     return (
@@ -299,16 +258,11 @@ export default function TempleMap() {
             ))}
           </SelectContent>
         </Select>
-
-        {/* Admin mode button commented out as requested */}
-        {/* <Button variant={isAdmin ? "destructive" : "outline"} onClick={toggleAdminMode} className="w-full md:w-auto">
-          {isAdmin ? "Exit Admin Mode" : "Admin Mode"}
-        </Button> */}
       </div>
       
       <div className="h-[500px] md:h-[600px] rounded-lg overflow-hidden border shadow-md relative z-10">
         <MapContainer center={center} zoom={4} style={{ height: "100%", width: "100%" }} whenCreated={(mapInstance) => {
-        mapRef.current = mapInstance;
+          mapRef.current = mapInstance;
         }}>
           <TileLayer
             attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
@@ -316,111 +270,107 @@ export default function TempleMap() {
           />
           <MapUpdater center={center} />
           <MarkerClusterGroup>
-          {geocodedTemples.map((temple) => (
-            <Marker
-              key={temple.id}
-              position={[temple.latitude, temple.longitude]}
-              eventHandlers={{
-                click: () => {
-                  setSelectedTemple(temple);
-                  if (mapRef.current) {
-                     mapRef.current.flyTo([temple.latitude, temple.longitude], 12, {
-                     animate: true,
-                     });
-                  }
-                },
-                // mouseover: (e) => {
-                //   e.target.openPopup(); // Show popup on hover
-                // },
-                // mouseout: (e) => {
-                //   e.target.closePopup(); // Hide popup when mouse leaves
-                // },
-              }}
-            >
-            <Tooltip direction="top" offset={[0, -20]} opacity={1}>
-              <div className="bg-white p-2 rounded-lg shadow-md text-gray-800 max-w-[300px] break-words">
-                <div className="font-semibold text-sm whitespace-normal">{temple.name}</div>
-                <div className="text-xs text-gray-600 whitespace-normal">{temple.address}</div>
-                <div className="mt-1 text-[10px] text-gray-500">
-                  {temple.latitude != null && temple.longitude != null
-                  ? `${temple.latitude.toFixed(4)}, ${temple.longitude.toFixed(4)}`
-                  : "Location not available"}
-                </div>
-              </div>
-            </Tooltip>
-
-              <Popup>
-                <Card className="w-[250px] border-0 shadow-none">
-                  <CardContent className="p-0">
-                    <div className="space-y-2">
-                      <img
-                        src={temple.image || "/placeholder.svg"}
-                        alt={temple.name}
-                        className="w-full h-[150px] object-cover rounded-t-lg"
-                      />
-                      <div className="p-2">
-                        <h3 className="font-bold text-lg">{temple.name}</h3>
-                        <p className="text-sm text-muted-foreground">{temple.address}</p>
-                        <div className="text-sm text-muted-foreground">
-                          <a
-                            href={temple.website}
-                            target="_blank"
-                            rel="noopener noreferrer"
-                            className="text-xs text-blue-600 hover:underline"
-                          >
-                            {temple.website}
-                          </a>
-                        </div>
-                        <div className="flex items-center text-xs text-muted-foreground mt-1">
-                          <MapPin className="h-3 w-3 mr-1" />
-                          <span>
-                            {temple.latitude != null && temple.longitude != null
-                            ? `${temple.latitude.toFixed(4)}, ${temple.longitude.toFixed(4)}`
-                            : "Location not available"}
-                          </span>
-                        </div>
-                        <div className="flex justify-between mt-3">
-                          <a
-                            href={temple.googleMapsLink}
-                            target="_blank"
-                            rel="noopener noreferrer"
-                            className="text-xs text-blue-600 hover:underline"
-                          >
-                            View on Google Maps
-                          </a>
-
-                          {isAdmin && (
-                            <Button
-                              variant="outline"
-                              size="sm"
-                              onClick={(e) => {
-                                e.stopPropagation()
-                                setSelectedTemple(temple)
-                                setIsEditModalOpen(true)
-                              }}
-                              className="text-xs h-7 px-2"
-                            >
-                              Edit
-                            </Button>
-                          )}
-                        </div>
+            {filteredTemples.map((temple) => (
+              temple.latitude && temple.longitude ? (
+                <Marker
+                  key={temple.id}
+                  position={[temple.latitude, temple.longitude]}
+                  eventHandlers={{
+                    click: () => {
+                      setSelectedTemple(temple);
+                      if (mapRef.current) {
+                         mapRef.current.flyTo([temple.latitude, temple.longitude], 12, {
+                         animate: true,
+                         });
+                      }
+                    },
+                  }}
+                >
+                  <Tooltip direction="top" offset={[0, -20]} opacity={1}>
+                    <div className="bg-white p-2 rounded-lg shadow-md text-gray-800 max-w-[300px] break-words">
+                      <div className="font-semibold text-sm whitespace-normal">{temple.name}</div>
+                      <div className="text-xs text-gray-600 whitespace-normal">{temple.address}</div>
+                      <div className="mt-1 text-[10px] text-gray-500">
+                        {temple.latitude != null && temple.longitude != null
+                        ? `${temple.latitude.toFixed(4)}, ${temple.longitude.toFixed(4)}`
+                        : "Location not available"}
                       </div>
                     </div>
-                  </CardContent>
-                </Card>
-              </Popup>
-            </Marker>
-          ))}
+                  </Tooltip>
+
+                  <Popup>
+                    <Card className="w-[250px] border-0 shadow-none">
+                      <CardContent className="p-0">
+                        <div className="space-y-2">
+                          <img
+                            src={temple.image || "/placeholder.svg"}
+                            alt={temple.name}
+                            className="w-full h-[150px] object-cover rounded-t-lg"
+                          />
+                          <div className="p-2">
+                            <h3 className="font-bold text-lg">{temple.name}</h3>
+                            <p className="text-sm text-muted-foreground">{temple.address}</p>
+                            {temple.hoursOpen && (
+                              <p className="text-xs text-muted-foreground mt-1">
+                                Hours: {temple.hoursOpen}
+                              </p>
+                            )}
+                            {temple.website && (
+                              <div className="text-sm text-muted-foreground">
+                                <a
+                                  href={temple.website}
+                                  target="_blank"
+                                  rel="noopener noreferrer"
+                                  className="text-xs text-blue-600 hover:underline"
+                                >
+                                  {temple.website}
+                                </a>
+                              </div>
+                            )}
+                            <div className="flex items-center text-xs text-muted-foreground mt-1">
+                              <MapPin className="h-3 w-3 mr-1" />
+                              <span>
+                                {temple.latitude != null && temple.longitude != null
+                                ? `${temple.latitude.toFixed(4)}, ${temple.longitude.toFixed(4)}`
+                                : "Location not available"}
+                              </span>
+                            </div>
+                            <div className="flex justify-between mt-3">
+                              {temple.googleMapsLink && (
+                                <a
+                                  href={temple.googleMapsLink}
+                                  target="_blank"
+                                  rel="noopener noreferrer"
+                                  className="text-xs text-blue-600 hover:underline"
+                                >
+                                  View on Google Maps
+                                </a>
+                              )}
+
+                              {isAdmin && (
+                                <Button
+                                  variant="outline"
+                                  size="sm"
+                                  onClick={(e) => {
+                                    e.stopPropagation()
+                                    setSelectedTemple(temple)
+                                    setIsEditModalOpen(true)
+                                  }}
+                                  className="text-xs h-7 px-2"
+                                >
+                                  Edit
+                                </Button>
+                              )}
+                            </div>
+                          </div>
+                        </div>
+                      </CardContent>
+                    </Card>
+                  </Popup>
+                </Marker>
+              ) : null
+            ))}
           </MarkerClusterGroup>
-          
-        {/*          
-            {userLocation && (
-            <Marker position={userLocation} ref={markerRef}>
-              <Popup>You are here</Popup>
-              <PopupControl markerRef={markerRef} />
-            </Marker>
-            )} 
-        */}
         </MapContainer>
       </div>
 
