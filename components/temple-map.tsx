@@ -92,7 +92,18 @@ export default function TempleMap() {
     }
     return null;
   };
-  
+
+  const formatAddress = (addr: any): string => {
+  const parts = [
+      addr.line1,
+      addr.line2,
+      addr.city,
+      addr.state,
+      addr.zipcode,
+      addr.country || "USA" // Default to USA if country is null
+    ]
+    return parts.filter(Boolean).join(', ')
+  };
   // Center of USA
   //const center = [39.8283, -98.5795]
   // Replace `center` definition
@@ -209,7 +220,8 @@ export default function TempleMap() {
   const loadGeocodedTemples = async () => {
     const results = await Promise.all(
       filteredTemples.map(async (temple) => {
-        const coords = await geocodeAddress(temple.address);
+        const fullAddress = formatAddress(temple.resource.physicalAddress);
+        const coords = await geocodeAddress(fullAddress);
         if (coords) {
           return { ...temple, lat: coords.lat, lon: coords.lon };
         }
