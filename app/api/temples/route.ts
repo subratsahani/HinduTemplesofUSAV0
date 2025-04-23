@@ -18,31 +18,33 @@ export async function GET() {
       const address = resource.physicalAddress || {};
       const contact = resource.contact || {};
 
-      // Format complete address for geocoding
-      const formattedAddress = [
-        address.line1,
-        address.line2,
-        address.city,
-        address.state,
-        address.zipcode,
-        address.country || "USA"
-      ].filter(Boolean).join(', ');
+      // Format the address more carefully to avoid issues with the geocoder
+      // Clean up any empty values, remove potential placeholders
+      const addressParts = [
+        address.line1 || "",
+        address.line2 || "",
+        address.city || "",
+        address.state || "",
+        address.zipcode || "",
+        "USA" // Explicitly add USA for better geocoding results
+      ].filter(part => part && !part.includes("{{") && !part.includes("}}") && part.trim() !== "");
+
+      const formattedAddress = addressParts.join(', ');
 
       return {
-        id: resource.id,
+        id: resource.id || String(Math.random()),
         name: resource.name || "Unnamed Temple",
-        address: formattedAddress, // Single formatted address string for display
-        physicalAddress: address, // Keep original structure for reference
-        state: address.state || "Unknown", // Extract state for filtering
-        latitude: null, // Will be filled by geocoding
-        longitude: null, // Will be filled by geocoding
-        website: contact.website,
+        address: formattedAddress,
+        state: address.state || "Unknown",
+        latitude: null,
+        longitude: null,
+        website: contact.website || null,
         phone: contact.phone?.[0]?.number || null,
         hoursOpen: resource.hoursOpen || null,
         image: resource.imageURL || "/placeholder.svg?height=200&width=300",
         detailURL: entry.detailURL || null,
         sponsored: resource.sponsored || false,
-        googleMapsLink: null // Will be generated after geocoding
+        googleMapsLink: null
       };
     });
 
