@@ -18,14 +18,33 @@ const initialTemples = [
   {
     id: "1",
     name: "BAPS Shri Swaminarayan Mandir",
-    address: "460 Rockbridge Rd NW, Lilburn, GA 30047",
+    street: "460 Rockbridge Rd NW",
+    city: "Lilburn",
     state: "Georgia",
-    image: "/placeholder.svg?height=200&width=300",
-    latitude: 33.8896,
-    longitude: -84.143,
-    googleMapsLink: "https://maps.google.com/?q=33.8896,-84.1430",
+    countryCode: "US",
+    postalCode: "30047",
+    lat: 33.8896,
+    lng: -84.143,
+    phone: "",
+    website: "",
+    image: "/placeholder.svg?height=200&width=300"
   }
 ]
+
+// Helper function to create Google Maps URL from coordinates or address
+const createGoogleMapsUrl = (temple) => {
+  // Prefer using coordinates if they exist as they're more precise
+  if (temple.lat && temple.lng) {
+    return `https://maps.google.com/?q=${temple.lat},${temple.lng}`;
+  }
+  
+  // Fall back to using the address if coordinates aren't available
+  const address = encodeURIComponent(
+    `${temple.name}, ${temple.street}, ${temple.city}, ${temple.state} ${temple.postalCode}`
+  );
+  return `https://maps.google.com/?q=${address}`;
+};
+
 // Component to recenter map when filters change
 function MapUpdater({ center }) {
   const map = useMap()
@@ -80,64 +99,19 @@ export default function TempleMap() {
   const { toast } = useToast()
 
   // Center of USA
-  //const center = [39.8283, -98.5795]
-  // Replace `center` definition
   const defaultCenter = [39.8283, -98.5795] // fallback center
-  const center = userLocation || defaultCenter // 👈 UPDATED to prefer user location
+  const center = userLocation || defaultCenter // Use user location if available
 
   // Fix Leaflet icon issue
   useEffect(() => {
     fixLeafletIcon()
-
-    // 👇 NEW: Try to get user's location
-  // if (navigator.geolocation) {
-  //   navigator.geolocation.getCurrentPosition(
-  //     (pos) => {
-  //       setUserLocation([pos.coords.latitude, pos.coords.longitude])
-  //       console.log("User location found:", pos.coords)
-  //     },
-  //     (err) => {
-  //       console.warn("Geolocation error:", err)
-  //     }
-  //   )
-  // }
-
   }, [])
-  // Use the initial data directly instead of fetching
-  // useEffect(() => {
-  //   // We're using the hardcoded data directly
-  //   setTemples(initialTemples)
-  //   setFilteredTemples(initialTemples)
-  //   setStates(getUniqueStates(initialTemples))
-  //   setIsLoading(false)
-
-  //   // Log that we're using hardcoded data
-  //   console.log("Using hardcoded temple data")
-  // }, [])
-
-  // useEffect(() => {
-  //   // Fetch the JSON file from the public directory
-  //   fetch('/data/temples.json')
-  //     .then((response) => response.json())
-  //     .then((data) => {
-  //       setTemples(data);
-  //       setFilteredTemples(data);
-  //       setStates(getUniqueStates(data)); // You can keep this logic
-  //       setIsLoading(false);
-        
-  //       console.log('Data fetched from temples.json');
-  //     })
-  //     .catch((error) => {
-  //       console.error('Error fetching temples data:', error);
-  //       setIsLoading(false);
-  //     });
-  // }, []);
 
   useEffect(() => {
     // Set loading state
     setIsLoading(true);
     
-    // Call your API route instead of the static JSON file
+    // Call your API route
     fetch('/api/temples')
       .then((response) => {
         if (!response.ok) {
@@ -146,11 +120,22 @@ export default function TempleMap() {
         return response.json();
       })
       .then((data) => {
-        // Assuming your API returns { temples: [...] }
-        const templeData = data.temples || data; // Handle both formats
-        setTemples(templeData);
-        setFilteredTemples(templeData);
-        setStates(getUniqueStates(templeData)); // You can keep this logic
+        // Extract temples from the response and process them
+        const templeData = data.temples || data;
+        
+        // Process temples to ensure proper data types for lat and lng
+        const processedTemples = templeData.map((temple, index) => ({
+          ...temple,
+          id: temple.id || String(index + 1), // Add id if not present
+          lat: parseFloat(temple.lat), // Convert lat to float
+          lng: parseFloat(temple.lng), // Convert lng to float
+          // Add image placeholder if not present
+          image: temple.image || "/placeholder.svg?height=200&width=300"
+        }));
+        
+        setTemples(processedTemples);
+        setFilteredTemples(processedTemples);
+        setStates(getUniqueStates(processedTemples));
         setIsLoading(false);
 
         console.log('Data fetched from API');
@@ -160,34 +145,6 @@ export default function TempleMap() {
         setIsLoading(false);
       });
   }, []);
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
   // Handle state selection
   const handleStateChange = (value) => {
@@ -212,7 +169,9 @@ export default function TempleMap() {
     if (searchTerm) {
       const term = searchTerm.toLowerCase()
       filtered = filtered.filter(
-        (temple) => temple.name.toLowerCase().includes(term) || temple.address.toLowerCase().includes(term),
+        (temple) => 
+          temple.name.toLowerCase().includes(term) || 
+          `${temple.street}, ${temple.city}, ${temple.state}`.toLowerCase().includes(term)
       )
     }
 
@@ -228,24 +187,6 @@ export default function TempleMap() {
       description: `${updatedTemple.name} has been updated successfully.`,
     })
   }
-
-  // // Reference to the marker
-  // const markerRef = useRef(null);
-  // // Hook to manage popup behavior
-  // const PopupControl = ({ markerRef }) => {
-  //   const map = useMap();
-
-  //   useEffect(() => {
-  //     if (markerRef.current) {
-  //       markerRef.current.openPopup(); // Automatically open popup
-  //       setTimeout(() => {
-  //         markerRef.current.closePopup(); // Close popup after 3 seconds
-  //       }, 3000);
-  //     }
-  //   }, [map, markerRef]);
-
-  //   return null;
-  // };
 
   if (isLoading) {
     return (
@@ -284,17 +225,17 @@ export default function TempleMap() {
             ))}
           </SelectContent>
         </Select>
-
-        {/* Admin mode button commented out as requested */}
-        {/* <Button variant={isAdmin ? "destructive" : "outline"} onClick={toggleAdminMode} className="w-full md:w-auto">
-          {isAdmin ? "Exit Admin Mode" : "Admin Mode"}
-        </Button> */}
       </div>
 
       <div className="h-[500px] md:h-[600px] rounded-lg overflow-hidden border shadow-md relative z-10">
-        <MapContainer center={center} zoom={4} style={{ height: "100%", width: "100%" }} whenCreated={(mapInstance) => {
-        mapRef.current = mapInstance;
-        }}>
+        <MapContainer 
+          center={center} 
+          zoom={4} 
+          style={{ height: "100%", width: "100%" }} 
+          whenCreated={(mapInstance) => {
+            mapRef.current = mapInstance;
+          }}
+        >
           <TileLayer
             attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
             url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
@@ -314,18 +255,14 @@ export default function TempleMap() {
                      });
                   }
                 },
-                // mouseover: (e) => {
-                //   e.target.openPopup(); // Show popup on hover
-                // },
-                // mouseout: (e) => {
-                //   e.target.closePopup(); // Hide popup when mouse leaves
-                // },
               }}
             >
             <Tooltip direction="top" offset={[0, -20]} opacity={1}>
               <div className="bg-white p-2 rounded-lg shadow-md text-gray-800 max-w-[300px] break-words">
                 <div className="font-semibold text-sm whitespace-normal">{temple.name}</div>
-                <div className="text-xs text-gray-600 whitespace-normal">{temple.street}, {temple.city}, {temple.state} {temple.postalCode}</div>
+                <div className="text-xs text-gray-600 whitespace-normal">
+                  {temple.street}, {temple.city}, {temple.state} {temple.postalCode}
+                </div>
                 <div className="mt-1 text-[10px] text-gray-500">
                   {temple.lat.toFixed(4)}, {temple.lng.toFixed(4)}
                 </div>
@@ -343,17 +280,26 @@ export default function TempleMap() {
                       />
                       <div className="p-2">
                         <h3 className="font-bold text-lg">{temple.name}</h3>
-                        <p className="text-sm text-muted-foreground">{temple.street}, {temple.city}, {temple.state} {temple.postalCode}</p>
-                        <div className="text-sm text-muted-foreground">
-                          <a
-                            href={temple.website}
-                            target="_blank"
-                            rel="noopener noreferrer"
-                            className="text-xs text-blue-600 hover:underline"
-                          >
-                            {temple.website}
-                          </a>
-                        </div>
+                        <p className="text-sm text-muted-foreground">
+                          {temple.street}, {temple.city}, {temple.state} {temple.postalCode}
+                        </p>
+                        {temple.phone && (
+                          <p className="text-xs text-muted-foreground">
+                            {temple.phone}
+                          </p>
+                        )}
+                        {temple.website && (
+                          <div className="text-sm text-muted-foreground">
+                            <a
+                              href={temple.website}
+                              target="_blank"
+                              rel="noopener noreferrer"
+                              className="text-xs text-blue-600 hover:underline"
+                            >
+                              {temple.website}
+                            </a>
+                          </div>
+                        )}
                         <div className="flex items-center text-xs text-muted-foreground mt-1">
                           <MapPin className="h-3 w-3 mr-1" />
                           <span>
@@ -362,7 +308,7 @@ export default function TempleMap() {
                         </div>
                         <div className="flex justify-between mt-3">
                           <a
-                            href={temple.googleMapsLink}
+                            href={createGoogleMapsUrl(temple)}
                             target="_blank"
                             rel="noopener noreferrer"
                             className="text-xs text-blue-600 hover:underline"
@@ -393,15 +339,6 @@ export default function TempleMap() {
             </Marker>
           ))}
           </MarkerClusterGroup>
-
-        {/*          
-            {userLocation && (
-            <Marker position={userLocation} ref={markerRef}>
-              <Popup>You are here</Popup>
-              <PopupControl markerRef={markerRef} />
-            </Marker>
-            )} 
-        */}
         </MapContainer>
       </div>
 
