@@ -115,51 +115,51 @@ export default function TempleMap() {
   //   console.log("Using hardcoded temple data")
   // }, [])
 
-  useEffect(() => {
-    // Fetch the JSON file from the public directory
-    fetch('/data/temples.json')
-      .then((response) => response.json())
-      .then((data) => {
-        setTemples(data);
-        setFilteredTemples(data);
-        setStates(getUniqueStates(data)); // You can keep this logic
-        setIsLoading(false);
-        
-        console.log('Data fetched from temples.json');
-      })
-      .catch((error) => {
-        console.error('Error fetching temples data:', error);
-        setIsLoading(false);
-      });
-  }, []);
-
   // useEffect(() => {
-  //   // Set loading state
-  //   setIsLoading(true);
-    
-  //   // Call your API route instead of the static JSON file
-  //   fetch('/api/temples')
-  //     .then((response) => {
-  //       if (!response.ok) {
-  //         throw new Error('Network response was not ok');
-  //       }
-  //       return response.json();
-  //     })
+  //   // Fetch the JSON file from the public directory
+  //   fetch('/data/temples.json')
+  //     .then((response) => response.json())
   //     .then((data) => {
-  //       // Assuming your API returns { temples: [...] }
-  //       const templeData = data.temples || data; // Handle both formats
-  //       setTemples(templeData);
-  //       setFilteredTemples(templeData);
-  //       setStates(getUniqueStates(templeData)); // You can keep this logic
+  //       setTemples(data);
+  //       setFilteredTemples(data);
+  //       setStates(getUniqueStates(data)); // You can keep this logic
   //       setIsLoading(false);
-
-  //       console.log('Data fetched from API');
+        
+  //       console.log('Data fetched from temples.json');
   //     })
   //     .catch((error) => {
   //       console.error('Error fetching temples data:', error);
   //       setIsLoading(false);
   //     });
   // }, []);
+
+  useEffect(() => {
+    // Set loading state
+    setIsLoading(true);
+    
+    // Call your API route instead of the static JSON file
+    fetch('/api/temples')
+      .then((response) => {
+        if (!response.ok) {
+          throw new Error('Network response was not ok');
+        }
+        return response.json();
+      })
+      .then((data) => {
+        // Assuming your API returns { temples: [...] }
+        const templeData = data.temples || data; // Handle both formats
+        setTemples(templeData);
+        setFilteredTemples(templeData);
+        setStates(getUniqueStates(templeData)); // You can keep this logic
+        setIsLoading(false);
+
+        console.log('Data fetched from API');
+      })
+      .catch((error) => {
+        console.error('Error fetching temples data:', error);
+        setIsLoading(false);
+      });
+  }, []);
 
 
 
@@ -304,12 +304,12 @@ export default function TempleMap() {
           {filteredTemples.map((temple) => (
             <Marker
               key={temple.id}
-              position={[temple.latitude, temple.longitude]}
+              position={[temple.lat, temple.lng]}
               eventHandlers={{
                 click: () => {
                   setSelectedTemple(temple);
                   if (mapRef.current) {
-                     mapRef.current.flyTo([temple.latitude, temple.longitude], 12, {
+                     mapRef.current.flyTo([temple.lat, temple.lng], 12, {
                      animate: true,
                      });
                   }
@@ -325,9 +325,9 @@ export default function TempleMap() {
             <Tooltip direction="top" offset={[0, -20]} opacity={1}>
               <div className="bg-white p-2 rounded-lg shadow-md text-gray-800 max-w-[300px] break-words">
                 <div className="font-semibold text-sm whitespace-normal">{temple.name}</div>
-                <div className="text-xs text-gray-600 whitespace-normal">{temple.address}</div>
+                <div className="text-xs text-gray-600 whitespace-normal">{temple.street}, {temple.city}, {temple.state} {temple.postalCode}</div>
                 <div className="mt-1 text-[10px] text-gray-500">
-                  {temple.latitude.toFixed(4)}, {temple.longitude.toFixed(4)}
+                  {temple.lat.toFixed(4)}, {temple.lng.toFixed(4)}
                 </div>
               </div>
             </Tooltip>
@@ -343,7 +343,7 @@ export default function TempleMap() {
                       />
                       <div className="p-2">
                         <h3 className="font-bold text-lg">{temple.name}</h3>
-                        <p className="text-sm text-muted-foreground">{temple.address}</p>
+                        <p className="text-sm text-muted-foreground">{temple.street}, {temple.city}, {temple.state} {temple.postalCode}</p>
                         <div className="text-sm text-muted-foreground">
                           <a
                             href={temple.website}
@@ -357,7 +357,7 @@ export default function TempleMap() {
                         <div className="flex items-center text-xs text-muted-foreground mt-1">
                           <MapPin className="h-3 w-3 mr-1" />
                           <span>
-                            {temple.latitude.toFixed(4)}, {temple.longitude.toFixed(4)}
+                            {temple.lat.toFixed(4)}, {temple.lng.toFixed(4)}
                           </span>
                         </div>
                         <div className="flex justify-between mt-3">
