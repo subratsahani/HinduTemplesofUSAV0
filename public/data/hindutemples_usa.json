@@ -15142,5 +15142,17 @@
     "lng": "-105.9435744",
     "phone": "",
     "website": ""
+  },
+  {
+    "name": "Sri Ganesha Temple of Anchorage, Alaska",
+    "street": "4025 Raspberry Rd",
+    "city": "Anchorage",
+    "state": "Alaska",
+    "countryCode": "US",
+    "postalCode": "99502",
+    "lat": "61.15951580931219",
+    "lng": "-149.9545910821559",
+    "phone": "",
+    "website": "https://m.facebook.com/GaneshaTempleOfAlaska/"
   }
 ]
