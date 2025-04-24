@@ -31,14 +31,27 @@ const initialTemples = [
   }
 ]
 
+// Helper function to check if coordinates are valid
+const hasValidCoordinates = (temple) => {
+  const lat = parseFloat(temple.lat);
+  const lng = parseFloat(temple.lng);
+  
+  // Check if lat and lng are valid numbers and in reasonable range
+  return (
+    !isNaN(lat) && !isNaN(lng) &&
+    lat >= -90 && lat <= 90 &&
+    lng >= -180 && lng <= 180
+  );
+};
+
 // Helper function to create Google Maps URL from coordinates or address
 const createGoogleMapsUrl = (temple) => {
-  // Prefer using coordinates if they exist as they're more precise
-  if (temple.lat && temple.lng) {
-    return `https://maps.google.com/?q=${temple.lat},${temple.lng}`;
+  // Check if coordinates are valid
+  if (hasValidCoordinates(temple)) {
+    return `https://maps.google.com/?q=${parseFloat(temple.lat)},${parseFloat(temple.lng)}`;
   }
   
-  // Fall back to using the address if coordinates aren't available
+  // Fall back to using the address
   const address = encodeURIComponent(
     `${temple.name}, ${temple.street}, ${temple.city}, ${temple.state} ${temple.postalCode}`
   );
@@ -120,31 +133,63 @@ export default function TempleMap() {
         return response.json();
       })
       .then((data) => {
-        // Extract temples from the response and process them
+        // Extract temples from the response
         const templeData = data.temples || data;
         
-        // Process temples to ensure proper data types for lat and lng
-        const processedTemples = templeData.map((temple, index) => ({
-          ...temple,
-          id: temple.id || String(index + 1), // Add id if not present
-          lat: parseFloat(temple.lat), // Convert lat to float
-          lng: parseFloat(temple.lng), // Convert lng to float
-          // Add image placeholder if not present
-          image: temple.image || "/placeholder.svg?height=200&width=300"
-        }));
+        // Process temples to ensure proper data types and validate coordinates
+        const processedTemples = templeData.map((temple, index) => {
+          // Parse coordinates while handling potential invalid values
+          const lat = parseFloat(temple.lat);
+          const lng = parseFloat(temple.lng);
+          
+          return {
+            ...temple,
+            id: temple.id || String(index + 1), // Add id if not present
+            lat: isNaN(lat) ? 0 : lat, // Use 0 as fallback if invalid
+            lng: isNaN(lng) ? 0 : lng, // Use 0 as fallback if invalid
+            // Add image placeholder if not present
+            image: temple.image || "/placeholder.svg?height=200&width=300",
+            // Flag to indicate if it has valid coordinates for filtering
+            hasValidCoordinates: hasValidCoordinates(temple)
+          };
+        });
         
-        setTemples(processedTemples);
-        setFilteredTemples(processedTemples);
-        setStates(getUniqueStates(processedTemples));
+        // Filter out temples with invalid coordinates to prevent map errors
+        const validTemples = processedTemples.filter(temple => temple.hasValidCoordinates);
+        
+        console.log(`Found ${validTemples.length} temples with valid coordinates out of ${processedTemples.length} total`);
+        
+        if (validTemples.length === 0) {
+          toast({
+            title: "No Valid Temple Data",
+            description: "None of the temples have valid coordinates. Check your data format.",
+            variant: "destructive"
+          });
+        } else if (validTemples.length < processedTemples.length) {
+          toast({
+            title: "Some Invalid Temple Data",
+            description: `${processedTemples.length - validTemples.length} temples were excluded due to invalid coordinates.`,
+            variant: "warning"
+          });
+        }
+        
+        setTemples(validTemples);
+        setFilteredTemples(validTemples);
+        setStates(getUniqueStates(validTemples));
         setIsLoading(false);
 
         console.log('Data fetched from API');
       })
       .catch((error) => {
         console.error('Error fetching temples data:', error);
+        toast({
+          title: "Error Loading Temple Data",
+          description: error.message,
+          variant: "destructive"
+        });
         setIsLoading(false);
       });
-  }, []);
+  }, [toast]);
 
   // Handle state selection
   const handleStateChange = (value) => {
