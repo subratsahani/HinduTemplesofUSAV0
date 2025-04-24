@@ -9337,15 +9337,15 @@
   },
   {
     "name": "Shree Maha Kali Temple",
-    "street": "\"110-43 155th. Street",
-    "city": "(bet. 110 Rd. & 111th.Ave.)",
-    "state": "110-43 155th St\"",
-    "countryCode": "South Jamaica",
-    "postalCode": "New York",
-    "lat": "US",
-    "lng": "11433",
-    "phone": "40.6898668",
-    "website": "-73.7937256"
+    "street": "110-43 155th. Street, (bet. 110 Rd. & 111th.Ave.), 110-43 155th St",
+    "city": "South Jamaica",
+    "state": "New York",
+    "countryCode": "US",
+    "postalCode": "11433",
+    "lat": "40.68984795877299",
+    "lng": "-73.79385703127792",
+    "phone": "(718) 641-1865",
+    "website": ""
   },
   {
     "name": "ISKCON New York City",
