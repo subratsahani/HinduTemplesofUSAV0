@@ -132,13 +132,12 @@ function MapController({ center, temples, selectedState, openPopupId }) {
         );
         
         // Open the popup after map movement is complete
-        setTimeout(() => {
+        map.once('moveend', () => {
           if (popupRef && popupRef.openPopup) {
             popupRef.openPopup();
-            // Reset flag after popup has been opened
             isPopupOpeningRef.current = false;
           }
-        }, 1200); // Wait for flyTo animation to complete
+        });
       }
     }
   }, [openPopupId, temples, map]);
@@ -549,6 +548,7 @@ export default function TempleMap() {
           zoom={4} 
           style={{ height: "100%", width: "100%" }}
           preferCanvas={true}
+          closePopupOnClick={false}
         >
           <TileLayer
             attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
@@ -569,11 +569,13 @@ export default function TempleMap() {
             chunkedLoading
             disableClusteringAtZoom={12}
             spiderfyOnMaxZoom={true}
-            zoomToBoundsOnClick={false} // Add this line to prevent automatic zoom behaviors
-            spiderLegPolylineOptions={{
-              weight: 1.5,
-              color: '#222',
-              opacity: 0.5,
+            zoomToBoundsOnClick={false}
+            showCoverageOnHover={false}
+            removeOutsideVisibleBounds={true}
+            eventHandlers={{
+              clusterclick: (e) => {
+                e.originalEvent.stopPropagation(); // prevent zoom
+              }
             }}
           >
             {filteredTemples.map((temple) => (
