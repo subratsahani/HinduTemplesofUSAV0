@@ -63,6 +63,7 @@ function MapController({ center, temples, selectedState, openPopupId }) {
   const map = useMap();
   const hasInitializedRef = useRef(false);
   const popupRefs = useRef({});
+  const isPopupOpeningRef = useRef(false);
 
   // Register popup refs
   const registerPopupRef = (id, ref) => {
@@ -73,6 +74,9 @@ function MapController({ center, temples, selectedState, openPopupId }) {
 
   // Effect for handling state filtering
   useEffect(() => {
+    // Skip state change effects if we're in the middle of opening a popup
+    if (isPopupOpeningRef.current) return;
+
     // Initial setup on component mount
     if (!hasInitializedRef.current) {
       map.setView(center, 4); // Initial zoom level
@@ -107,10 +111,12 @@ function MapController({ center, temples, selectedState, openPopupId }) {
       const popupRef = popupRefs.current[openPopupId];
       const temple = temples.find(t => t.id === openPopupId);
       
-      if (temple) {
+      if (temple && popupRef) {
+        // Set flag to prevent state filtering from affecting our view
+        isPopupOpeningRef.current = true;
+        
         // Calculate popup offset for centering
         const popupHeight = 300; // Estimate of popup content height
-        const offset = L.point(0, -popupHeight/2);
         
         // First pan map to include the marker and its popup
         map.flyTo(
@@ -127,7 +133,11 @@ function MapController({ center, temples, selectedState, openPopupId }) {
         
         // Open the popup after map movement is complete
         setTimeout(() => {
-          popupRef.openPopup();
+          if (popupRef && popupRef.openPopup) {
+            popupRef.openPopup();
+            // Reset flag after popup has been opened
+            isPopupOpeningRef.current = false;
+          }
         }, 1200); // Wait for flyTo animation to complete
       }
     }
@@ -145,6 +155,18 @@ function ControlledMarker({ temple, onMarkerClick, isPopupOpen, registerPopupRef
       registerPopupRef(temple.id, markerRef.current);
     }
   }, [temple.id, registerPopupRef]);
+  
+  // Open popup when isPopupOpen flag changes
+  useEffect(() => {
+    if (isPopupOpen && markerRef.current) {
+      // Make sure popup stays open by setting a slight delay
+      setTimeout(() => {
+        if (markerRef.current) {
+          markerRef.current.openPopup();
+        }
+      }, 100);
+    }
+  }, [isPopupOpen]);
   
   return (
     <Marker
@@ -169,7 +191,12 @@ function ControlledMarker({ temple, onMarkerClick, isPopupOpen, registerPopupRef
         </div>
       </Tooltip>
 
-      <Popup autoClose={false} minWidth={280} offset={[0, -20]}>
+      <Popup 
+        autoClose={false} 
+        closeOnClick={false} 
+        minWidth={280} 
+        offset={[0, -20]}
+      >
         <Card className="w-[250px] border-0 shadow-none">
           <CardContent className="p-0">
             <div className="space-y-2">
@@ -466,6 +493,10 @@ export default function TempleMap() {
   const handleMarkerClick = (temple) => {
     setSelectedTemple(temple);
     setActivePopupId(temple.id);
+  
+  // Prevent the state filter from changing the view while we're looking at a popup
+  // This is important - don't immediately reset to the broader state view
+  // when a marker is clicked
   };
 
   // Handler for registering popup ref function
@@ -538,6 +569,7 @@ export default function TempleMap() {
             chunkedLoading
             disableClusteringAtZoom={12}
             spiderfyOnMaxZoom={true}
+            zoomToBoundsOnClick={false} // Add this line to prevent automatic zoom behaviors
             spiderLegPolylineOptions={{
               weight: 1.5,
               color: '#222',
