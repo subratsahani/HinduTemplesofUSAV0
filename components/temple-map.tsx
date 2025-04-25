@@ -7,11 +7,11 @@ import { Input } from "@/components/ui/input"
 import { Button } from "@/components/ui/button"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import { Card, CardContent } from "@/components/ui/card"
-import { Search, MapPin } from "lucide-react"
+import { Search, MapPin, Eye } from "lucide-react"
 import L from "leaflet"
 import { useToast } from "@/components/ui/use-toast"
 import AdminEditModal from "./admin-edit-modal"
-import MarkerClusterGroup from 'react-leaflet-cluster';
+import MarkerClusterGroup from 'react-leaflet-cluster'
 
 // Sample data - fallback in case JSON fetch fails
 const initialTemples = [
@@ -128,6 +128,8 @@ export default function TempleMap() {
   const [isEditModalOpen, setIsEditModalOpen] = useState(false)
   const [states, setStates] = useState(getUniqueStates(initialTemples))
   const [isLoading, setIsLoading] = useState(true)
+  const [visits, setVisits] = useState(0)
+  const [isVisitLoading, setIsVisitLoading] = useState(true)
 
   const [userLocation, setUserLocation] = useState<[number, number] | null>(null)
 
@@ -143,6 +145,7 @@ export default function TempleMap() {
     fixLeafletIcon()
   }, [])
 
+  // Load temple data
   useEffect(() => {
     // Set loading state
     setIsLoading(true);
@@ -221,7 +224,7 @@ export default function TempleMap() {
 
     async function fetchAndUpdateVisits() {
       try {
-        setVisitsLoading(true)
+        setIsVisitLoading(true)
         
         // Check if this visit has been counted in this session
         const visitCounted = sessionStorage.getItem("visitCounted")
@@ -244,10 +247,10 @@ export default function TempleMap() {
         const data = await response.json()
         
         setVisits(data.visits)
-        setVisitsLoading(false)
+        setIsVisitLoading(false)
       } catch (error) {
         console.error("Error updating visit counter:", error)
-        setVisitsLoading(false)
+        setIsVisitLoading(false)
       }
     }
 
@@ -266,7 +269,7 @@ export default function TempleMap() {
 
     return () => clearInterval(interval)
   }, [])
-  
+
   // Handle state selection
   const handleStateChange = (value) => {
     // Explicitly handle the "all" case
@@ -473,7 +476,7 @@ export default function TempleMap() {
         
         <div className="inline-flex items-center space-x-2 py-2 px-4 bg-white rounded-md border shadow-sm">
           <Eye className="h-4 w-4 text-muted-foreground" />
-          {visitsLoading ? (
+          {isVisitLoading ? (
             <span className="text-sm text-muted-foreground">Loading visits...</span>
           ) : (
             <span className="text-sm text-muted-foreground">{visits.toLocaleString()} page visits</span>
@@ -491,6 +494,7 @@ export default function TempleMap() {
     </div>
   )
 }
+
 // "use client"
 
 // import { useState, useEffect, useRef } from "react"
