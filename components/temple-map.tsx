@@ -58,48 +58,82 @@ const createGoogleMapsUrl = (temple) => {
   return `https://maps.google.com/?q=${address}`;
 };
 
-// Enhanced component to update map view when filters change
-function MapUpdater({ center, temples, selectedState, mapRef }) {
-  const map = useMap()
-  const hasInitializedRef = useRef(false)
+// Component that manages popups and map updates
+function MapController({ center, temples, selectedState, openPopupId }) {
+  const map = useMap();
+  const hasInitializedRef = useRef(false);
+  const popupRefs = useRef({});
 
-  // Store the map reference so it can be accessed from outside this component
-  useEffect(() => {
-    if (mapRef) {
-      mapRef.current = map;
+  // Register popup refs
+  const registerPopupRef = (id, ref) => {
+    if (ref) {
+      popupRefs.current[id] = ref;
     }
-  }, [map, mapRef]);
+  };
 
+  // Effect for handling state filtering
   useEffect(() => {
     // Initial setup on component mount
     if (!hasInitializedRef.current) {
-      map.setView(center, 4) // Initial zoom level
-      hasInitializedRef.current = true
-      return
+      map.setView(center, 4); // Initial zoom level
+      hasInitializedRef.current = true;
+      return;
     }
 
     // If state is selected, zoom to that state's bounds
     if (selectedState) {
       // Filter temples for the selected state
-      const stateTemples = temples.filter(temple => temple.state === selectedState && hasValidCoordinates(temple))
+      const stateTemples = temples.filter(temple => temple.state === selectedState && hasValidCoordinates(temple));
       
       if (stateTemples.length > 0) {
         // Create a bounds object from the filtered temples
-        const bounds = L.latLngBounds(stateTemples.map(temple => [temple.lat, temple.lng]))
+        const bounds = L.latLngBounds(stateTemples.map(temple => [temple.lat, temple.lng]));
         
         // Fit the map to these bounds with some padding
         map.fitBounds(bounds, { 
           padding: [50, 50],
           maxZoom: 10 // Prevent zooming in too close for states with few temples
-        })
+        });
       }
     } else {
       // When "All States" is selected, zoom back out to the default view
-      map.setView(center, 4)
+      map.setView(center, 4);
     }
-  }, [selectedState, temples, map, center, mapRef])
-  
-  return null
+  }, [selectedState, temples, map, center]);
+
+  // Effect for handling popup opening
+  useEffect(() => {
+    if (openPopupId && popupRefs.current[openPopupId]) {
+      const popupRef = popupRefs.current[openPopupId];
+      const temple = temples.find(t => t.id === openPopupId);
+      
+      if (temple) {
+        // Calculate popup offset for centering
+        const popupHeight = 300; // Estimate of popup content height
+        const offset = L.point(0, -popupHeight/2);
+        
+        // First pan map to include the marker and its popup
+        map.flyTo(
+          [temple.lat, temple.lng], 
+          13, // Closer zoom for better visibility
+          {
+            animate: true,
+            duration: 1,
+            // Ensure the popup is fully visible
+            paddingTopLeft: [50, 50],
+            paddingBottomRight: [50, 300]
+          }
+        );
+        
+        // Open the popup after map movement is complete
+        setTimeout(() => {
+          popupRef.openPopup();
+        }, 1200); // Wait for flyTo animation to complete
+      }
+    }
+  }, [openPopupId, temples, map]);
+
+  return { registerPopupRef };
 }
 
 // Fix for Leaflet icon in Next.js
@@ -125,6 +159,95 @@ const getUniqueStates = (temples) => {
   return [...new Set(states)].sort()
 }
 
+// Controlled marker component that can open its popup programmatically
+function ControlledMarker({ temple, onMarkerClick, isPopupOpen, registerPopupRef }) {
+  const markerRef = useRef(null);
+  
+  useEffect(() => {
+    if (markerRef.current) {
+      registerPopupRef(temple.id, markerRef.current);
+    }
+  }, [temple.id, registerPopupRef]);
+  
+  return (
+    <Marker
+      ref={markerRef}
+      position={[temple.lat, temple.lng]}
+      eventHandlers={{
+        click: (e) => {
+          e.originalEvent.stopPropagation();
+          onMarkerClick(temple);
+        },
+      }}
+    >
+      <Tooltip direction="top" offset={[0, -20]} opacity={1}>
+        <div className="bg-white p-2 rounded-lg shadow-md text-gray-800 max-w-[300px] break-words">
+          <div className="font-semibold text-sm whitespace-normal">{temple.name}</div>
+          <div className="text-xs text-gray-600 whitespace-normal">
+            {temple.street}, {temple.city}, {temple.state} {temple.postalCode}
+          </div>
+{/*           <div className="mt-1 text-[10px] text-gray-500">
+            {temple.lat.toFixed(4)}, {temple.lng.toFixed(4)}
+          </div> */}
+        </div>
+      </Tooltip>
+
+      <Popup autoClose={false} minWidth={280} offset={[0, -20]}>
+        <Card className="w-[250px] border-0 shadow-none">
+          <CardContent className="p-0">
+            <div className="space-y-2">
+              <img
+                src={temple.image || "/placeholder.svg"}
+                alt={temple.name}
+                className="w-full h-[150px] object-cover rounded-t-lg"
+              />
+              <div className="p-2">
+                <h3 className="font-bold text-lg">{temple.name}</h3>
+                <p className="text-sm text-muted-foreground">
+                  {temple.street}, {temple.city}, {temple.state} {temple.postalCode}
+                </p>
+                {temple.phone && (
+                  <p className="text-xs text-muted-foreground">
+                    {temple.phone}
+                  </p>
+                )}
+                {temple.website && (
+                  <div className="text-sm text-muted-foreground">
+                    <a
+                      href={temple.website}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="text-xs text-blue-600 hover:underline"
+                    >
+                      {temple.website}
+                    </a>
+                  </div>
+                )}
+{/*                 <div className="flex items-center text-xs text-muted-foreground mt-1">
+                  <MapPin className="h-3 w-3 mr-1" />
+                  <span>
+                    {temple.lat.toFixed(4)}, {temple.lng.toFixed(4)}
+                  </span>
+                </div> */}
+                <div className="flex justify-between mt-3">
+                  <a
+                    href={createGoogleMapsUrl(temple)}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="text-xs text-blue-600 hover:underline"
+                  >
+                    View on Google Maps
+                  </a>
+                </div>
+              </div>
+            </div>
+          </CardContent>
+        </Card>
+      </Popup>
+    </Marker>
+  );
+}
+
 export default function TempleMap() {
   const [temples, setTemples] = useState(initialTemples)
   const [filteredTemples, setFilteredTemples] = useState(initialTemples)
@@ -137,11 +260,10 @@ export default function TempleMap() {
   const [isLoading, setIsLoading] = useState(true)
   const [visits, setVisits] = useState(0)
   const [isVisitLoading, setIsVisitLoading] = useState(true)
-  const [activePopup, setActivePopup] = useState(null)
+  const [activePopupId, setActivePopupId] = useState(null)
 
   const [userLocation, setUserLocation] = useState<[number, number] | null>(null)
 
-  const mapRef = useRef(null)
   const { toast } = useToast()
 
   // Center of USA
@@ -286,6 +408,9 @@ export default function TempleMap() {
     } else {
       setSelectedState(value)
     }
+    
+    // Close any open popup when changing states
+    setActivePopupId(null)
   }
 
   // Filter temples based on search term and selected state
@@ -320,21 +445,10 @@ export default function TempleMap() {
     })
   }
 
-  // Function to handle marker clicks
+  // Handle marker click
   const handleMarkerClick = (temple) => {
     setSelectedTemple(temple);
-    setActivePopup(temple.id);
-    
-    // Use a slight delay to ensure the map ref is ready
-    setTimeout(() => {
-      if (mapRef.current) {
-        // First zoom in to the marker
-        mapRef.current.flyTo([temple.lat, temple.lng], 12, {
-          animate: true,
-          duration: 1 // 1 second animation
-        });
-      }
-    }, 100);
+    setActivePopupId(temple.id);
   };
 
   if (isLoading) {
@@ -387,113 +501,39 @@ export default function TempleMap() {
             attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
             url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
           />
-          <MapUpdater center={center} temples={temples} selectedState={selectedState} mapRef={mapRef} />
-          <MarkerClusterGroup
-            chunkedLoading
-            disableClusteringAtZoom={12}
-            spiderfyOnMaxZoom={true}
-            // The cluster group's eventHandlers can conflict with marker clicks
-            // Setting singleMarkerMode to true can help
-            spiderLegPolylineOptions={{
-              weight: 1.5,
-              color: '#222',
-              opacity: 0.5,
-            }}
-          >
-            {filteredTemples.map((temple) => (
-              <Marker
-                key={temple.id}
-                position={[temple.lat, temple.lng]}
-                eventHandlers={{
-                  click: (e) => {
-                    // Stop event propagation to prevent clustering interference
-                    e.originalEvent.stopPropagation();
-                    handleMarkerClick(temple);
-                  },
+          
+          {/* Custom component for handling map interactions */}
+          {({ map }) => {
+            const { registerPopupRef } = MapController({ 
+              center, 
+              temples, 
+              selectedState, 
+              openPopupId: activePopupId
+            });
+            
+            return (
+              <MarkerClusterGroup
+                chunkedLoading
+                disableClusteringAtZoom={12}
+                spiderfyOnMaxZoom={true}
+                spiderLegPolylineOptions={{
+                  weight: 1.5,
+                  color: '#222',
+                  opacity: 0.5,
                 }}
               >
-                <Tooltip direction="top" offset={[0, -20]} opacity={1}>
-                  <div className="bg-white p-2 rounded-lg shadow-md text-gray-800 max-w-[300px] break-words">
-                    <div className="font-semibold text-sm whitespace-normal">{temple.name}</div>
-                    <div className="text-xs text-gray-600 whitespace-normal">
-                      {temple.street}, {temple.city}, {temple.state} {temple.postalCode}
-                    </div>
-                    <div className="mt-1 text-[10px] text-gray-500">
-                      {temple.lat.toFixed(4)}, {temple.lng.toFixed(4)}
-                    </div>
-                  </div>
-                </Tooltip>
-
-                <Popup autoClose={false}>
-                  <Card className="w-[250px] border-0 shadow-none">
-                    <CardContent className="p-0">
-                      <div className="space-y-2">
-                        <img
-                          src={temple.image || "/placeholder.svg"}
-                          alt={temple.name}
-                          className="w-full h-[150px] object-cover rounded-t-lg"
-                        />
-                        <div className="p-2">
-                          <h3 className="font-bold text-lg">{temple.name}</h3>
-                          <p className="text-sm text-muted-foreground">
-                            {temple.street}, {temple.city}, {temple.state} {temple.postalCode}
-                          </p>
-                          {temple.phone && (
-                            <p className="text-xs text-muted-foreground">
-                              {temple.phone}
-                            </p>
-                          )}
-                          {temple.website && (
-                            <div className="text-sm text-muted-foreground">
-                              <a
-                                href={temple.website}
-                                target="_blank"
-                                rel="noopener noreferrer"
-                                className="text-xs text-blue-600 hover:underline"
-                              >
-                                {temple.website}
-                              </a>
-                            </div>
-                          )}
-                          <div className="flex items-center text-xs text-muted-foreground mt-1">
-                            <MapPin className="h-3 w-3 mr-1" />
-                            <span>
-                              {temple.lat.toFixed(4)}, {temple.lng.toFixed(4)}
-                            </span>
-                          </div>
-                          <div className="flex justify-between mt-3">
-                            <a
-                              href={createGoogleMapsUrl(temple)}
-                              target="_blank"
-                              rel="noopener noreferrer"
-                              className="text-xs text-blue-600 hover:underline"
-                            >
-                              View on Google Maps
-                            </a>
-
-                            {isAdmin && (
-                              <Button
-                                variant="outline"
-                                size="sm"
-                                onClick={(e) => {
-                                  e.stopPropagation()
-                                  setSelectedTemple(temple)
-                                  setIsEditModalOpen(true)
-                                }}
-                                className="text-xs h-7 px-2"
-                              >
-                                Edit
-                              </Button>
-                            )}
-                          </div>
-                        </div>
-                      </div>
-                    </CardContent>
-                  </Card>
-                </Popup>
-              </Marker>
-            ))}
-          </MarkerClusterGroup>
+                {filteredTemples.map((temple) => (
+                  <ControlledMarker
+                    key={temple.id}
+                    temple={temple}
+                    onMarkerClick={handleMarkerClick}
+                    isPopupOpen={activePopupId === temple.id}
+                    registerPopupRef={registerPopupRef}
+                  />
+                ))}
+              </MarkerClusterGroup>
+            );
+          }}
         </MapContainer>
       </div>
 
