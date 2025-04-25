@@ -214,6 +214,59 @@ export default function TempleMap() {
       });
   }, [toast]);
 
+  // Handle visit counter
+  useEffect(() => {
+    // Only run this code on the client side
+    if (typeof window === "undefined") return
+
+    async function fetchAndUpdateVisits() {
+      try {
+        setVisitsLoading(true)
+        
+        // Check if this visit has been counted in this session
+        const visitCounted = sessionStorage.getItem("visitCounted")
+        
+        if (!visitCounted) {
+          // Increment the visit counter on the server
+          await fetch('/api/visits', { 
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json'
+            }
+          })
+          
+          // Mark that we've counted this visit in this session
+          sessionStorage.setItem("visitCounted", "true")
+        }
+        
+        // Get the current visit count
+        const response = await fetch('/api/visits')
+        const data = await response.json()
+        
+        setVisits(data.visits)
+        setVisitsLoading(false)
+      } catch (error) {
+        console.error("Error updating visit counter:", error)
+        setVisitsLoading(false)
+      }
+    }
+
+    fetchAndUpdateVisits()
+    
+    // Set up a periodic refresh to show other visits without incrementing
+    const interval = setInterval(async () => {
+      try {
+        const response = await fetch('/api/visits')
+        const data = await response.json()
+        setVisits(data.visits)
+      } catch (error) {
+        console.error("Error refreshing visit counter:", error)
+      }
+    }, 60000) // Refresh every minute
+
+    return () => clearInterval(interval)
+  }, [])
+  
   // Handle state selection
   const handleStateChange = (value) => {
     // Explicitly handle the "all" case
@@ -410,11 +463,22 @@ export default function TempleMap() {
         </MapContainer>
       </div>
 
-      <div className="text-sm text-muted-foreground">
-        Showing {filteredTemples.length} of {temples.length} temples
-        {selectedState && (
-          <span> in {selectedState}</span>
-        )}
+      <div className="flex justify-between items-center">
+        <div className="text-sm text-muted-foreground">
+          Showing {filteredTemples.length} of {temples.length} temples
+          {selectedState && (
+            <span> in {selectedState}</span>
+          )}
+        </div>
+        
+        <div className="inline-flex items-center space-x-2 py-2 px-4 bg-white rounded-md border shadow-sm">
+          <Eye className="h-4 w-4 text-muted-foreground" />
+          {visitsLoading ? (
+            <span className="text-sm text-muted-foreground">Loading visits...</span>
+          ) : (
+            <span className="text-sm text-muted-foreground">{visits.toLocaleString()} page visits</span>
+          )}
+        </div>
       </div>
 
       {isEditModalOpen && selectedTemple && (
