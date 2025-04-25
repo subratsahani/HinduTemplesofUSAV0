@@ -38,7 +38,7 @@ export default function Home() {
         <div className="container mx-auto space-y-8">
           <FeedbackForm />
           <div className="border-t pt-4">
-            <VisitCounter />
+{/*             <VisitCounter /> */}
             {/* Add SEO-rich footer */}
             <SeoFooter />
           </div>
