@@ -136,29 +136,6 @@ function MapController({ center, temples, selectedState, openPopupId }) {
   return { registerPopupRef };
 }
 
-// Fix for Leaflet icon in Next.js
-const fixLeafletIcon = () => {
-  // Only run on client side
-  if (typeof window !== "undefined") {
-    delete L.Icon.Default.prototype._getIconUrl
-    L.Icon.Default.mergeOptions({
-      iconUrl: "/marker-icon-om.png",
-      iconRetinaUrl: "/marker-icon-om.png",
-      shadowUrl: "/marker-shadow.png",
-      iconSize: [39, 41],
-      iconAnchor: [12, 41],
-      popupAnchor: [1, -34],
-      shadowSize: [41, 41],
-    })
-  }
-}
-
-// Get all unique states from the temples data
-const getUniqueStates = (temples) => {
-  const states = temples.map((temple) => temple.state)
-  return [...new Set(states)].sort()
-}
-
 // Controlled marker component that can open its popup programmatically
 function ControlledMarker({ temple, onMarkerClick, isPopupOpen, registerPopupRef }) {
   const markerRef = useRef(null);
@@ -186,9 +163,9 @@ function ControlledMarker({ temple, onMarkerClick, isPopupOpen, registerPopupRef
           <div className="text-xs text-gray-600 whitespace-normal">
             {temple.street}, {temple.city}, {temple.state} {temple.postalCode}
           </div>
-{/*           <div className="mt-1 text-[10px] text-gray-500">
+          <div className="mt-1 text-[10px] text-gray-500">
             {temple.lat.toFixed(4)}, {temple.lng.toFixed(4)}
-          </div> */}
+          </div>
         </div>
       </Tooltip>
 
@@ -223,12 +200,12 @@ function ControlledMarker({ temple, onMarkerClick, isPopupOpen, registerPopupRef
                     </a>
                   </div>
                 )}
-{/*                 <div className="flex items-center text-xs text-muted-foreground mt-1">
+                <div className="flex items-center text-xs text-muted-foreground mt-1">
                   <MapPin className="h-3 w-3 mr-1" />
                   <span>
                     {temple.lat.toFixed(4)}, {temple.lng.toFixed(4)}
                   </span>
-                </div> */}
+                </div>
                 <div className="flex justify-between mt-3">
                   <a
                     href={createGoogleMapsUrl(temple)}
@@ -248,6 +225,46 @@ function ControlledMarker({ temple, onMarkerClick, isPopupOpen, registerPopupRef
   );
 }
 
+// Fix for Leaflet icon in Next.js
+const fixLeafletIcon = () => {
+  // Only run on client side
+  if (typeof window !== "undefined") {
+    delete L.Icon.Default.prototype._getIconUrl
+    L.Icon.Default.mergeOptions({
+      iconUrl: "/marker-icon-om.png",
+      iconRetinaUrl: "/marker-icon-om.png",
+      shadowUrl: "/marker-shadow.png",
+      iconSize: [39, 41],
+      iconAnchor: [12, 41],
+      popupAnchor: [1, -34],
+      shadowSize: [41, 41],
+    })
+  }
+}
+
+// Get all unique states from the temples data
+const getUniqueStates = (temples) => {
+  const states = temples.map((temple) => temple.state)
+  return [...new Set(states)].sort()
+}
+
+// Custom component to handle map controller
+function MapUpdater({ center, temples, selectedState, openPopupId, onRegisterPopupRef }) {
+  const { registerPopupRef } = MapController({ 
+    center, 
+    temples, 
+    selectedState, 
+    openPopupId 
+  });
+
+  // Pass the registerPopupRef function up to the parent
+  useEffect(() => {
+    onRegisterPopupRef(registerPopupRef);
+  }, [onRegisterPopupRef, registerPopupRef]);
+
+  return null;
+}
+
 export default function TempleMap() {
   const [temples, setTemples] = useState(initialTemples)
   const [filteredTemples, setFilteredTemples] = useState(initialTemples)
@@ -261,8 +278,8 @@ export default function TempleMap() {
   const [visits, setVisits] = useState(0)
   const [isVisitLoading, setIsVisitLoading] = useState(true)
   const [activePopupId, setActivePopupId] = useState(null)
-
-  const [userLocation, setUserLocation] = useState<[number, number] | null>(null)
+  const [userLocation, setUserLocation] = useState(null) // Fixed the TypeScript issue
+  const [registerPopupRefFn, setRegisterPopupRefFn] = useState(null)
 
   const { toast } = useToast()
 
@@ -451,6 +468,11 @@ export default function TempleMap() {
     setActivePopupId(temple.id);
   };
 
+  // Handler for registering popup ref function
+  const handleRegisterPopupRef = (registerFn) => {
+    setRegisterPopupRefFn(registerFn);
+  };
+
   if (isLoading) {
     return (
       <div className="h-[500px] md:h-[600px] rounded-lg overflow-hidden border shadow-md flex items-center justify-center bg-gray-100">
@@ -502,38 +524,36 @@ export default function TempleMap() {
             url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
           />
           
-          {/* Custom component for handling map interactions */}
-          {({ map }) => {
-            const { registerPopupRef } = MapController({ 
-              center, 
-              temples, 
-              selectedState, 
-              openPopupId: activePopupId
-            });
-            
-            return (
-              <MarkerClusterGroup
-                chunkedLoading
-                disableClusteringAtZoom={12}
-                spiderfyOnMaxZoom={true}
-                spiderLegPolylineOptions={{
-                  weight: 1.5,
-                  color: '#222',
-                  opacity: 0.5,
-                }}
-              >
-                {filteredTemples.map((temple) => (
-                  <ControlledMarker
-                    key={temple.id}
-                    temple={temple}
-                    onMarkerClick={handleMarkerClick}
-                    isPopupOpen={activePopupId === temple.id}
-                    registerPopupRef={registerPopupRef}
-                  />
-                ))}
-              </MarkerClusterGroup>
-            );
-          }}
+          {/* Custom component to handle map updates */}
+          <MapUpdater 
+            center={center} 
+            temples={temples} 
+            selectedState={selectedState} 
+            openPopupId={activePopupId}
+            onRegisterPopupRef={handleRegisterPopupRef}
+          />
+          
+          {/* Render markers outside of a callback */}
+          <MarkerClusterGroup
+            chunkedLoading
+            disableClusteringAtZoom={12}
+            spiderfyOnMaxZoom={true}
+            spiderLegPolylineOptions={{
+              weight: 1.5,
+              color: '#222',
+              opacity: 0.5,
+            }}
+          >
+            {filteredTemples.map((temple) => (
+              <ControlledMarker
+                key={temple.id}
+                temple={temple}
+                onMarkerClick={handleMarkerClick}
+                isPopupOpen={activePopupId === temple.id}
+                registerPopupRef={registerPopupRefFn || (() => {})}
+              />
+            ))}
+          </MarkerClusterGroup>
         </MapContainer>
       </div>
 
@@ -565,7 +585,6 @@ export default function TempleMap() {
     </div>
   )
 }
-
 // "use client"
 
 // import { useState, useEffect, useRef } from "react"
