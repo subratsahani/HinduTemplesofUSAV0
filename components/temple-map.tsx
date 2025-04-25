@@ -59,7 +59,7 @@ const createGoogleMapsUrl = (temple) => {
 };
 
 // Component that manages popups and map updates
-function MapController({ center, temples, selectedState, openPopupId }) {
+function MapController({ center, temples, selectedState, openPopupId, userOpenedPopup }) {
   const map = useMap();
   const hasInitializedRef = useRef(false);
   const popupRefs = useRef({});
