@@ -936,16 +936,16 @@
     "website": "http://www.bapscharities.org/usa/san-diego-ca/"
   },
   {
-    "name": "ISKCON temple",
+    "name": "ISKCON Temple San Diego",
     "street": "1030 Grand Ave",
     "city": "San Diego",
     "state": "California",
     "countryCode": "US",
     "postalCode": "92109",
-    "lat": "32.7960065",
-    "lng": "-117.2506977",
-    "phone": "",
-    "website": ""
+    "lat": "32.795845410364585",
+    "lng": "-117.25064051038508",
+    "phone": "(858) 483-2500",
+    "website": "https://iskconsandiego.com/"
   },
   {
     "name": "Shirdi Sai Parivaar",
@@ -2242,18 +2242,6 @@
     "lng": "-117.0555478",
     "phone": "(858) 549-3940",
     "website": "http://www.vcscsd.com/"
-  },
-  {
-    "name": "Hare krishna Temple",
-    "street": "1030 Grand Ave",
-    "city": "San Diego",
-    "state": "California",
-    "countryCode": "US",
-    "postalCode": "92109",
-    "lat": "32.7958458",
-    "lng": "-117.2506498",
-    "phone": "(858) 483-2500",
-    "website": "https://iskconsandiego.com/"
   },
   {
     "name": "Gurdwara Dasmesh Darbar Sikh Temple",
@@ -15154,5 +15142,17 @@
     "lng": "-149.9545910821559",
     "phone": "",
     "website": "https://m.facebook.com/GaneshaTempleOfAlaska/"
+  },
+  {
+    "name": "Sankaṭ Mochan Hanumān Temple",
+    "street": "445 Summit Rd",
+    "city": "Watsonville",
+    "state": "California",
+    "countryCode": "US",
+    "postalCode": "95076",
+    "lat": "37.02554878550405",
+    "lng": "-121.74457656075258",
+    "phone": "(408) 722-0226",
+    "website": "https://mountmadonna.org/"
   }
 ]
