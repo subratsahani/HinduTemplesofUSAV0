@@ -6,7 +6,7 @@ import path from 'path';
 export async function GET() {
   try {
     // Path to your JSON file
-    const filePath = path.join(process.cwd(), 'public', 'data', 'hindutemples_usa.json');
+    const filePath = path.join(process.cwd(), 'data', 'hindutemples_usa.json');
 
     // Read and parse the JSON file
     const fileData = fs.readFileSync(filePath, 'utf8');
