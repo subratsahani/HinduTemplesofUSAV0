@@ -106,32 +106,24 @@ function MapController({ center, temples, selectedState, openPopupId }) {
   }, [selectedState, temples, map, center]);
 
   // Effect for handling popup opening
-  useEffect(() => {
+ useEffect(() => {
     if (openPopupId && popupRefs.current[openPopupId]) {
       const popupRef = popupRefs.current[openPopupId];
       const temple = temples.find(t => t.id === openPopupId);
       
       if (temple && popupRef) {
-        // Set flag to prevent state filtering from affecting our view
         isPopupOpeningRef.current = true;
-        
-        // Calculate popup offset for centering
-        const popupHeight = 300; // Estimate of popup content height
-        
-        // First pan map to include the marker and its popup
-        map.flyTo(
-          [temple.lat, temple.lng], 
-          13, // Closer zoom for better visibility
-          {
+
+        // ✅ Skip flyTo if the user just clicked the marker manually
+        if (!userOpenedPopup) {
+          map.flyTo([temple.lat, temple.lng], 13, {
             animate: true,
             duration: 1,
-            // Ensure the popup is fully visible
             paddingTopLeft: [50, 50],
             paddingBottomRight: [50, 300]
-          }
-        );
-        
-        // Open the popup after map movement is complete
+          });
+        }
+
         map.once('moveend', () => {
           if (popupRef && popupRef.openPopup) {
             popupRef.openPopup();
@@ -140,7 +132,7 @@ function MapController({ center, temples, selectedState, openPopupId }) {
         });
       }
     }
-  }, [openPopupId, temples, map]);
+  }, [openPopupId, temples, map, userOpenedPopup]);
 
   return { registerPopupRef };
 }
@@ -275,15 +267,15 @@ const getUniqueStates = (temples) => {
 }
 
 // Custom component to handle map controller
-function MapUpdater({ center, temples, selectedState, openPopupId, onRegisterPopupRef }) {
-  const { registerPopupRef } = MapController({ 
-    center, 
-    temples, 
-    selectedState, 
-    openPopupId 
+function MapUpdater({ center, temples, selectedState, openPopupId, onRegisterPopupRef, userOpenedPopup }) {
+  const { registerPopupRef } = MapController({
+    center,
+    temples,
+    selectedState,
+    openPopupId,
+    userOpenedPopup
   });
 
-  // Pass the registerPopupRef function up to the parent
   useEffect(() => {
     onRegisterPopupRef(registerPopupRef);
   }, [onRegisterPopupRef, registerPopupRef]);
@@ -306,7 +298,7 @@ export default function TempleMap() {
   const [activePopupId, setActivePopupId] = useState(null)
   const [userLocation, setUserLocation] = useState(null) // Fixed the TypeScript issue
   const [registerPopupRefFn, setRegisterPopupRefFn] = useState(null)
-
+  const [userOpenedPopup, setUserOpenedPopup] = useState(false);
   const { toast } = useToast()
 
   // Center of USA
@@ -492,12 +484,22 @@ export default function TempleMap() {
   const handleMarkerClick = (temple) => {
     setSelectedTemple(temple);
     setActivePopupId(temple.id);
-  
+    setUserOpenedPopup(true);
   // Prevent the state filter from changing the view while we're looking at a popup
   // This is important - don't immediately reset to the broader state view
   // when a marker is clicked
   };
 
+  useEffect(() => {
+  if (userOpenedPopup) {
+      const timeout = setTimeout(() => {
+        setUserOpenedPopup(false);
+      }, 1000);
+
+      return () => clearTimeout(timeout);
+    }
+  }, [userOpenedPopup]);
+  
   // Handler for registering popup ref function
   const handleRegisterPopupRef = (registerFn) => {
     setRegisterPopupRefFn(registerFn);
@@ -561,6 +563,7 @@ export default function TempleMap() {
             temples={temples} 
             selectedState={selectedState} 
             openPopupId={activePopupId}
+            userOpenedPopup={userOpenedPopup}
             onRegisterPopupRef={handleRegisterPopupRef}
           />
           
@@ -570,13 +573,8 @@ export default function TempleMap() {
             disableClusteringAtZoom={12}
             spiderfyOnMaxZoom={true}
             zoomToBoundsOnClick={false}
-            showCoverageOnHover={false}
+            showCoverageOnHover={true}
             removeOutsideVisibleBounds={true}
-            eventHandlers={{
-              clusterclick: (e) => {
-                e.originalEvent.stopPropagation(); // prevent zoom
-              }
-            }}
           >
             {filteredTemples.map((temple) => (
               <ControlledMarker
