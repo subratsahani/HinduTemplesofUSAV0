@@ -4,7 +4,7 @@ import * as fs from 'fs';
 import * as path from 'path';
 
 // Path to the visits file
-const visitsFilePath = path.join(process.cwd(), 'data', 'visits.json');
+const visitsFilePath = path.join(process.cwd(), 'public', 'data', 'visits.json');
 
 // Ensure the data directory exists
 function ensureDataDirectoryExists() {
