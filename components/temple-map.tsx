@@ -106,9 +106,6 @@ export default function TempleMap() {
   const [isLoading, setIsLoading] = useState(true)
 
   const [userLocation, setUserLocation] = useState<[number, number] | null>(null)
-
-  const [mapCenter, setMapCenter] = useState(center)
-  const [mapZoom, setMapZoom] = useState(4) // default national zoom
   
   const mapRef = useRef(null)
   const { toast } = useToast()
@@ -117,6 +114,9 @@ export default function TempleMap() {
   const defaultCenter = [39.8283, -98.5795] // fallback center
   const center = userLocation || defaultCenter // Use user location if available
 
+  const [mapCenter, setMapCenter] = useState(center)
+  const [mapZoom, setMapZoom] = useState(4) // default national zoom
+  
   // Fix Leaflet icon issue
   useEffect(() => {
     fixLeafletIcon()
