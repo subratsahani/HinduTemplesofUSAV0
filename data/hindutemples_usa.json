@@ -15154,5 +15154,29 @@
     "lng": "-121.74457656075258",
     "phone": "(408) 722-0226",
     "website": "https://mountmadonna.org/"
+  },
+  {
+    "name": "Isha Institute of Inner-Sciences",
+    "street": "951 Isha Ln",
+    "city": "McMinnville",
+    "state": "Tennessee",
+    "countryCode": "US",
+    "postalCode": "37110",
+    "lat": "35.56548937812376",
+    "lng": "-85.57485330262408",
+    "phone": "(931) 668-1900",
+    "website": "ishausa.org"
+  },
+  {
+    "name": "Kauai's Hindu Monastery",
+    "street": "107 Kaholalele Rd",
+    "city": "Kapaʻa",
+    "state": "Hawaii",
+    "countryCode": "US",
+    "postalCode": "96746",
+    "lat": "22.05771684704016",
+    "lng": "-159.3928431518866",
+    "phone": "(808) 822-3012",
+    "website": "http://www.himalayanacademy.com/"
   }
 ]
